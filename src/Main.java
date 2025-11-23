@@ -94,15 +94,15 @@ public class Main {
         String guestName = getUserInput("Input Guest Name: "); 
         
         String roomType = "";
-
+        int roomRate = 0;
         //room type
         do {
             roomType = getUserInput("Input Room Type: (1. Standard, 2. Deluxe, 3. Suite): ");
 
             switch (roomType) {
-                case "1" -> checkRoomStatus(standard);
-                case "2" -> checkRoomStatus(deluxe);
-                case "3" -> checkRoomStatus(suite);
+                case "1" -> {checkRoomStatus(standard); roomRate = 2500; roomType = "Standard";}
+                case "2" -> {checkRoomStatus(deluxe); roomRate = 4000;roomType = "Deluxe";}
+                case "3" -> {checkRoomStatus(suite); roomRate = 8000;roomType = "Suite";}
                 default -> {
                     System.out.println("Invalid room type, try again");
                     roomType = "False";
@@ -110,7 +110,21 @@ public class Main {
             }
 
         } while (roomType.equals("False"));
+        
+        //night booked
+        System.out.print("input nights booked: ");
+        int nightBooked = Integer.parseInt(kbd.nextLine());
 
+        System.out.println("Processing Walk-in Check-In... Checking for available " + roomType + " rooms"+ "(Php "+roomRate +"/night)...");
+
+        /*
+        need to do tomorrow:
+        - check availability for the room type selected
+        - if available, proceed to payment
+        - if payment successful, update room status to occupied
+        - display check-in successful message with guest name and room number
+         */
+        
 
         return false; // just a placeholder to avoid errors
     }
