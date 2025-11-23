@@ -76,40 +76,41 @@ public class Main {
     }
 
     private static boolean checkIn() {
-        //TODO: should return true if check-in is successful and false if otherwise
-        /**
-         * 4. Check-In Guest (walk-in)
-         * Input: input Guest Name, Room type and number, and payment (room only)
-         * Process: Verify room availability. Update room status to 'Occupied'.
-         * Output: Display "Check-In Successful”, Guest [Name] is now occupying Room [Number].
-         *
-         * algo
-         * ask their name, room type (number)n and payment
+        /*
+        4. Check-In Guest (walk-in)
+        Input: input Guest Name, Room type and number, and payment (room only)
+        Process: Verify room availability. Update room status to 'Occupied'.
+        Output: Display "Check-In Successful”, Guest [Name] is now occupying Room [Number].
+
+        Process:
+        1. input name of walk in gues
+        2. input what type of room they will get
+        3. input night booked
+        4. verify if there is room availability. update room stat to occupied
+        5. display check in successful with guest name is now occupying room num    
          */
 
-        // Scanner
-        Scanner beep = new Scanner(System.in);
+        //guest name
+        String guestName = getUserInput("Input Guest Name: "); 
+        
+        String roomType = "";
 
-        // Name of Walk in guest
-        System.out.print("input Guest Name: ");
-        String gName = beep.nextLine();
+        //room type
+        do {
+            roomType = getUserInput("Input Room Type: (1. Standard, 2. Deluxe, 3. Suite): ");
 
-        // Room Type
-        System.out.print("input Room Type: (1. Standard, 2.Deluxe,3.Suite): ");
-        int roomT = Integer.parseInt(beep.nextLine());
+            switch (roomType) {
+                case "1" -> checkRoomStatus(standard);
+                case "2" -> checkRoomStatus(deluxe);
+                case "3" -> checkRoomStatus(suite);
+                default -> {
+                    System.out.println("Invalid room type, try again");
+                    roomType = "False";
+                }
+            }
 
-        // night booked
-        System.out.print("input Nights Booked: ");
-        int nightsB = Integer.parseInt(beep.nextLine());
-        // need validation up to until 10 days
+        } while (roomType.equals("False"));
 
-        //Payment
-        System.out.println("input Payment");//add + method maybe? + for calcuu
-        int payment = Integer.parseInt(beep.nextLine());
-
-        //update stats
-        //check in succ text
-        //guest x is now occ room x for x night
 
         return false; // just a placeholder to avoid errors
     }
