@@ -165,4 +165,8 @@ public class Main {
         //TODO: print table layout. (using the standard, deluxe, and suite 2D-arrays)
 
     }
+
+    private static void checkInPayment(){
+        
+    }
 }
