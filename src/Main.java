@@ -93,14 +93,23 @@ public class Main {
 
         String roomType = "";
         int bill = 0;
-
+        boolean available = true;  
          do {
             roomType = getUserInput("Input Room Type: (1. Standard, 2. Deluxe, 3. Suite): ");
 
             switch (roomType) {
-                case "1" -> {checkRoomStatus(standard); bill = 2500; roomType = "Standard";}
-                case "2" -> {checkRoomStatus(deluxe); bill = 4000;roomType = "Deluxe";}
-                case "3" -> {checkRoomStatus(suite); bill = 8000;roomType = "Suite";}
+                case "1" -> {checkRoomStatus(standard);
+                            bill = 2500; 
+                            roomType = "Standard";
+                        }
+                case "2" -> {checkRoomStatus(deluxe); 
+                            bill = 4000;
+                            roomType = "Deluxe";
+                        }
+                case "3" -> {checkRoomStatus(suite);
+                            bill = 8000;
+                            roomType = "Suite";
+                        }
                 default -> {
                     System.out.println("Invalid room type, try again");
                     roomType = "False";
@@ -111,16 +120,29 @@ public class Main {
 
     // 3. Input of nights booked
 
-        String nBooked = getUserInput("input nights booked:");
+        String nightBookedStr = getUserInput("input nights booked:");
+        int nightBooked = Integer.parseInt(nightBookedStr);
         System.out.println("Processing Walk-in Check-In... Checking for available " + roomType + " rooms"+ "(Php "+bill +"/night)...");
         
-        
+        String roomNum = findRoomNum();
+        System.out.println("Found: " + roomNum);
     // 5. Update room status to occupied
+       if (available){
+            updateRoomStatus();
 
-    // 6. Payment for room
+                //6. Payment for room
+                boolean isPaid = processPayment(bill, nightBooked, guestName, roomType, kbd);
+                System.out.println("Update Status: Room" + roomNum + " is now occupied by " + guestName + ".");
+            if (isPaid) {
+                System.out.println("Proceeding with check-in...");
+            } else {
+                System.out.println("Cannot continue. Guest must pay first.");
+            }
+        }
 
     // 7. Display check-in successful with guest name and room number
-
+        System.out.println("--- Check-In Successful ---");
+        System.out.println("Guest Name: " + guestName + " Is now occupying Room" + roomNum + " for " + nightBooked + " nights.");
     return false;// just a placeholder to avoid errors
 }
 
@@ -152,14 +174,50 @@ public class Main {
         return day - 17;
     }
 
-    private static String checkRoomStatus(String[][] room) {
-    
-    return "No rooms found."; // fallback
-}
+    private static boolean checkRoomStatus(String[][] room) {
+        for (int j = 0; j < room[0].length; j++) {
+            if (room[0][j] == null) {   // check if empty
+                return true;            // at least one free room
+            }
+        }
+        
+        return false;                   // all rooms are occupied (not null)
+    }
+
+    private static String findRoomNum() {
+        return "placeholder"; // just a placeholder to avoid errors
+    }
 
     private static void printTable() {
         //TODO: print table layout. (using the standard, deluxe, and suite 2D-arrays)
 
     }
+    private static boolean updateRoomStatus() {
+
+        return false; // just a placeholder to avoid errors
+    }
+
+    private static boolean processPayment(int bill, int nightBooked, String guestName, String roomType, Scanner kbd) {
+    double totalAmount = bill * nightBooked;
+    double paymentAmount = 0;
+
+    do {
+        System.out.print("Please proceed to payment of Php " + totalAmount + ": ");
+        paymentAmount = Double.parseDouble(kbd.nextLine());
+
+        if (paymentAmount >= totalAmount) {
+            System.out.println("Payment Successful. Generating receipt...");
+            System.out.println("Check-In Successful! Guest " + guestName +
+                                " is now occupying a " + roomType + " room.");
+            System.out.println("change:" + (paymentAmount - totalAmount));
+            return true;
+        } else {
+            System.out.println("Insufficient payment. Try again.");
+        }
+
+    } while (paymentAmount < totalAmount);
+
+    return false;  // this will never run, but required by Java
+}
 
 }
