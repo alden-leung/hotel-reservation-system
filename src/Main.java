@@ -210,10 +210,102 @@ public class Main {
         }
     }
 
-    private static boolean checkIn() {
-        //TODO: should return true if check-in is successful and false if otherwise
+    private static void checkIn() {
+        int input, numOfDays, pricePerNight, totalPrice, payment = 0, change = 0;
+        String guestName, roomNumber = "";
 
-        return false; // just a placeholder to avoid errors
+        do {
+            System.out.println("\n┌────────────────────────┐");
+            System.out.println("│   Check In (Walk-In)   │");
+            System.out.println("├────────────────────────┤");
+            System.out.println("│ 1. Standard Rooms      │");
+            System.out.println("│ 2. Deluxe Rooms        │");
+            System.out.println("│ 3. Suite Rooms         │");
+            System.out.println("├────────────────────────┤");
+            System.out.println("│ 4. GO BACK             │");
+            System.out.println("└────────────────────────┘");
+            input = Integer.parseInt(getUserInput("Enter your choice: "));
+
+            // back to menu
+            if (input == 4) {
+                System.out.println("Back to Main Menu...");
+                return;
+            }
+
+            if (input < 1 || input > 4) {
+                System.out.println("\nPlease choose an option from 1 to 4 only...");
+            }
+        } while (input < 1 || input > 4);
+
+        // room table
+        String[][] roomArray = getRoomArray(input);
+
+        // room details
+        String[] roomDetails = getRoomTypeDetails(roomArray);
+        String roomPrefix = getRoomPrefix(input);
+
+        // guest name
+        guestName = getUserInput("Input Guest Name: ").trim();
+
+        // number of days
+        numOfDays = Integer.parseInt(getUserInput("Input Nights Booked: "));
+
+        // price
+        pricePerNight = Integer.parseInt(roomDetails[3]);
+        totalPrice = pricePerNight * numOfDays;
+
+        System.out.println("\nProcessing Walk-in Check-in...");
+        System.out.println("Checking for available " + roomDetails[0] + " rooms " + "(₱" + pricePerNight + "/night)...");
+
+        boolean successful = false;
+        for (int r = 0; r < roomArray.length; r++) {
+            boolean roomAvailable = false;
+
+            for (int c = 0; c < numOfDays; c++) {
+                if (roomArray[r][c] == null) {
+                    roomAvailable = roomArray[r][c] == null;
+                }
+            }
+
+            if (roomAvailable) {
+                for (int c = 0; c < numOfDays; c++) {
+                    roomArray[r][c] = "Occupied|" + guestName;
+                }
+
+                roomNumber = roomPrefix + (100 + r + 1);
+
+                System.out.println("\nFound: " + roomNumber);
+
+                payment = Integer.parseInt(getUserInput("Input Payment (Room Only, ₱" + totalPrice + " x " + numOfDays + "): "));
+                change = payment - totalPrice;
+
+                if (payment < totalPrice) {
+                    System.out.println("Your payment is insufficient of ₱" + (change * -1));
+                    break;
+                } else {
+                    System.out.println("Payment Successful.");
+                    successful = true;
+                    break;
+                }
+            }
+        }
+
+        if (successful) {
+            System.out.println("\n┌────────────────────────────────────────────┐");
+            System.out.println("│          Check-In Walk-In Summary          │");
+            System.out.println("├────────────────────────────────────────────┤");
+            System.out.printf("│ %-42s │%n", "Guest Name: " + guestName);
+            System.out.printf("│ %-42s │%n", "Room Type: " + roomDetails[0]);
+            System.out.printf("│ %-42s │%n", "Room Number: " + roomNumber);
+            System.out.printf("│ %-42s │%n", "Total Check-In Fee: ₱" + totalPrice);
+            System.out.printf("│ %-42s │%n", "Payment: ₱" + payment);
+            System.out.printf("│ %-42s │%n", "Change: ₱" + change);
+            System.out.println("└────────────────────────────────────────────┘");
+            System.out.println("Update Status: Room " + roomNumber + " is now set to 'Occupied' by " + guestName);
+            System.out.println(guestName + " is now occupying Room " + roomNumber + " for " + numOfDays + " night/s.");
+        } else {
+            System.out.println("Unable to process reservation...");
+        }
     }
 
     private static boolean checkOut() {
