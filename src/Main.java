@@ -105,7 +105,8 @@ public class Main {
     }
 
     private static void makeReservation() {
-        int input, numOfDays, pricePerNight, totalPrice;
+        int input, numOfDays ;
+        double pricePerNight, total;
         String guestName, roomNumber = "";
 
         do {
@@ -147,7 +148,7 @@ public class Main {
 
         // price
         pricePerNight = Integer.parseInt(roomDetails[3]);
-        totalPrice = pricePerNight * numOfDays;
+        total = pricePerNight * numOfDays;
 
         // dates
         String[] datesToReserve = new String[numOfDays];
@@ -186,7 +187,7 @@ public class Main {
 
                 System.out.println(
                         "Reservation Fee (Room Rate Only): " +
-                                "₱" + pricePerNight + " / night x " + numOfDays + " night/s = ₱" + totalPrice
+                                "₱" + pricePerNight + " / night x " + numOfDays + " night/s = ₱" + total
                 );
 
                 successful = true;
@@ -201,7 +202,7 @@ public class Main {
             System.out.printf("│ %-42s │%n", "Guest Name: " + guestName);
             System.out.printf("│ %-42s │%n", "Room Type: " + roomDetails[0]);
             System.out.printf("│ %-42s │%n", "Room Number: " + roomNumber);
-            System.out.printf("│ %-42s │%n", "Total Reservation Fee: ₱" + totalPrice);
+            System.out.printf("│ %-42s │%n", "Total Reservation Fee: ₱" + total);
             System.out.println("└────────────────────────────────────────────┘");
 
             System.out.println("Update Status: Room " + roomNumber + " is now set to 'Booked' by " + guestName);
@@ -211,8 +212,9 @@ public class Main {
     }
 
     private static void checkIn() {
-        int input, numOfDays, pricePerNight, totalPrice, payment = 0, change = 0;
-        String guestName, roomNumber = "";
+        int input, numOfDays;
+        double pricePerNight, totalPrice, payment = 0, change = 0;
+        String guestName, currentDate, roomNumber = "";
 
         do {
             System.out.println("\n┌────────────────────────┐");
@@ -244,8 +246,11 @@ public class Main {
         String[] roomDetails = getRoomTypeDetails(roomArray);
         String roomPrefix = getRoomPrefix(input);
 
+        // current date
+        currentDate = getUserInput("Input Date Today: ");
+
         // guest name
-        guestName = getUserInput("Input Guest Name: ").trim();
+        guestName = getUserInput("Input Guest Name: ");
 
         // number of days
         numOfDays = Integer.parseInt(getUserInput("Input Nights Booked: "));
@@ -259,33 +264,39 @@ public class Main {
 
         boolean successful = false;
         for (int r = 0; r < roomArray.length; r++) {
-            boolean roomAvailable = false;
+            int[] nullIndices = new int[10], availableDays;
+            int count = 0;
 
-            for (int c = 0; c < numOfDays; c++) {
+            // add index number to nullIndices list starting from current date
+            for (int c = getColIdx(currentDate); c < numOfDays; c++) {
                 if (roomArray[r][c] == null) {
-                    roomAvailable = roomArray[r][c] == null;
+                    nullIndices[count] = c;
+                    count++;
                 }
             }
 
-            if (roomAvailable) {
-                for (int c = 0; c < numOfDays; c++) {
-                    roomArray[r][c] = "Occupied|" + guestName;
-                }
+            availableDays = findConsecutive(nullIndices, numOfDays);
 
-                roomNumber = roomPrefix + (100 + r + 1);
+            if (availableDays != null) {
+                if (availableDays.length == numOfDays) {
+                    for (int c : availableDays) {
+                        roomArray[r][c] = "Occupied|" + guestName;
+                    }
+                    roomNumber = roomPrefix + (100 + r + 1);
 
-                System.out.println("\nFound: " + roomNumber);
+                    System.out.println("\nFound: " + roomNumber);
 
-                payment = Integer.parseInt(getUserInput("Input Payment (Room Only, ₱" + totalPrice + " x " + numOfDays + "): "));
-                change = payment - totalPrice;
+                    payment = Integer.parseInt(getUserInput("Input Payment (Room Only, ₱" + totalPrice + " (₱" + pricePerNight +  " x " + numOfDays + "): "));
+                    change = payment - totalPrice;
 
-                if (payment < totalPrice) {
-                    System.out.println("Your payment is insufficient of ₱" + (change * -1));
-                    break;
-                } else {
-                    System.out.println("Payment Successful.");
-                    successful = true;
-                    break;
+                    if (payment < totalPrice) {
+                        System.out.println("Your payment is insufficient of ₱" + (change * -1));
+                        break;
+                    } else {
+                        System.out.println("Payment Successful.");
+                        successful = true;
+                        break;
+                    }
                 }
             }
         }
@@ -308,16 +319,90 @@ public class Main {
         }
     }
 
-    private static boolean checkOut() {
-        //TODO: should return true if check-out is successful and false if otherwise
+    private static void checkOut() {
+        int rowIdx, numOfDays = 0;
+        String guestName, roomNumber = "";
+        boolean successful = false;
 
-        return false; // just a placeholder to avoid errors
+        // guest name
+        guestName = getUserInput("Input Guest Name: ").trim();
+
+        // room number and room prefix
+        roomNumber = getUserInput("Input Room Number For Check-Out: ");
+        rowIdx = Integer.parseInt(String.valueOf(roomNumber.charAt(3))) - 1;
+        String roomPrefix = String.valueOf(roomNumber.charAt(0));
+
+        // room table
+        String[][] roomArray = getRoomArray(roomPrefix.equals("S") ? 1 : roomPrefix.equals("D") ? 2 : 3);
+        String[] roomDetails = getRoomTypeDetails(roomArray);
+
+        boolean guestFound = false;
+        for (String col : roomArray[rowIdx]) {
+            if (col != null) {
+                if (col.toLowerCase().contains(guestName.toLowerCase())) {
+                    numOfDays++;
+                    guestFound = true;
+                }
+            }
+        }
+
+        if (guestFound) {
+            if (payment(Double.parseDouble(roomDetails[3]), numOfDays)) {
+
+                for (int c = 0; c < roomArray[rowIdx].length; c++) {
+                    String value = roomArray[rowIdx][c];
+
+                    if (value != null) {
+                        if (value.toLowerCase().contains(guestName.toLowerCase())) {
+                            roomArray[rowIdx][c] = null;
+                        }
+                    }
+                }
+
+                System.out.println("\nCheck-Out Complete. Room " + roomNumber + " is now available");
+            } else {
+                System.out.println("Insufficient Payment. Check-Out Failed...");
+            }
+        } else {
+            System.out.println("No guest named as '" + guestName + "' was registered in " + roomNumber);
+        }
     }
 
-    private static boolean payment() {
-        //TODO: should return true if payment is successful and false if otherwise
+    private static boolean payment(double pricePerNight, int numOfDays) {
+        double subtotal, total, tax, change;
+        double serviceFee = 250;
 
-        return false; // just a placeholder to avoid errors
+        subtotal = pricePerNight * numOfDays;
+        tax = (subtotal + serviceFee) * 0.1;
+        total = subtotal + serviceFee + tax;
+
+        System.out.println("Bill Calculation");
+        System.out.println("Subtotal (Room Rate Only): ₱" + subtotal);
+        System.out.println("Fixed Service Fee: ₱" + serviceFee);
+        System.out.println("Tax (10%): ₱" + tax);
+        System.out.println("Total Amount Due: ₱" + total);
+
+        double payment = Double.parseDouble(getUserInput("Input Final Payment Amount: "));
+        change = payment - total;
+        System.out.println("Payment: ₱" + payment + " received.");
+
+        if (payment >= total) {
+            System.out.println("\n┌────────────────────────────────────────────┐");
+            System.out.println("│                   Receipt                  │");
+            System.out.println("├────────────────────────────────────────────┤");
+            System.out.printf("│ %-42s │%n", "Subtotal (Room Rate Only): ₱" + pricePerNight);
+            System.out.printf("│ %-42s │%n", "Fixed Service Fee: ₱" + serviceFee);
+            System.out.printf("│ %-42s │%n", "Tax (10%): ₱" + tax);
+            System.out.printf("│ %-42s │%n", "Total Amount Due: ₱" + total);
+            System.out.println("├────────────────────────────────────────────┤");
+            System.out.printf("│ %-42s │%n", "Amount Paid: ₱" + payment);
+            System.out.printf("│ %-42s │%n", "Change Due: ₱" + change);
+            System.out.println("└────────────────────────────────────────────┘");
+
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /*
@@ -326,7 +411,27 @@ public class Main {
     private static String getUserInput(String message) {
         //TODO: print input message and return user input as a String
         System.out.print(message);
-        return kbd.nextLine();
+        return kbd.nextLine().trim();
+    }
+
+    private static int[] findConsecutive(int[] array, int length) {
+        int start = 0;
+
+        for (int i = 1; i <= array.length; i++) {
+            if (i == array.length || array[i] != array[i - 1] + 1) {
+                int runLength = i - start;
+
+                if (runLength >= length) {
+                    int[] result = new int[length];
+                    for (int j = 0; j < length; j++) {
+                        result[j] = array[start] + j;
+                    }
+                    return result;
+                }
+                start = i;
+            }
+        }
+        return null;
     }
 
     private static int getColIdx(String date) {
@@ -408,7 +513,7 @@ public class Main {
                     String room = roomType + (100 + r + 1);
                     System.out.printf("│ %-10s ", room);
                 } else { // row values
-                    String val = table[r][c] == null ? "" : table[r][c].split("\\|")[0];
+                    String val = table[r][c] == null ? "Available" : table[r][c].split("\\|")[0];
                     System.out.printf("│ %-10s ", val);
                 }
             }
