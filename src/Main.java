@@ -104,74 +104,110 @@ public class Main {
         }
     }
 
-    private static boolean makeReservation() {
-        //TODO: should return true if the reservation is successful and false if otherwise
+    private static void makeReservation() {
+        int input, numOfDays, pricePerNight, totalPrice;
+        String guestName, roomNumber = "";
 
-        // Reservation Process
-        // 1. get guest name
-        // 2. get room type
-        // 3. display room type status table
-        // 4. get number of days to reserve
-        // 5. get the dates based on the number of days
-        // 6. set successful = false
-        // 7. Loop through every "ROOMS" (i.e. the "ROWS" of the array), for each loop:
-        //      7.1. Check the columns that matches the dates
-        //      7.2. If those columns are available:
-        //              7.2.1 Assign the guest with the current "ROOM" for those columns (i.e. Dates) in the format ("1|<name>")
-        //              7.2.2 Set successful = true
-        //              7.2.3 Stop the loop
-        // 8. If successful = false, print a statement to notify guest that no rooms are available for those dates
-
-        //--------------------------------------------------------------------------------------------------------------
-
-        // 1. GUEST NAME
-        String guestName = getUserInput("Input Guest Name: ");
-        String roomType;
-        String[][] selectedRoomType = null;
-
-        // 2. ROOM TYPE
         do {
-            roomType = getUserInput("Input Room Type: (1. Standard, 2. Deluxe, 3. Suite): ");
+            System.out.println("\n┌────────────────────────┐");
+            System.out.println("│  Make New Reservation  │");
+            System.out.println("├────────────────────────┤");
+            System.out.println("│ 1. Standard Rooms      │");
+            System.out.println("│ 2. Deluxe Rooms        │");
+            System.out.println("│ 3. Suite Rooms         │");
+            System.out.println("├────────────────────────┤");
+            System.out.println("│ 4. GO BACK             │");
+            System.out.println("└────────────────────────┘");
+            input = Integer.parseInt(getUserInput("Enter your choice: "));
 
-            switch (roomType) {
-                case "1" ->  {
-                    selectedRoomType = standard;
-                }
-                case "2" -> {
-                    selectedRoomType = deluxe;
-                }
-                case "3" -> {
-                    selectedRoomType = suite;
-                }
-                default -> {
-                    System.out.println("Invalid room type, try again");
-                    roomType = "False";
-                }
+            // back to menu
+            if (input == 4) {
+                System.out.println("Back to Main Menu...");
+                return;
             }
-        } while (roomType.equals("False"));
 
-        // 3. DISPLAY TABLE
-        // printTable()
+            if (input < 1 || input > 4) {
+                System.out.println("\nPlease choose an option from 1 to 4 only...");
+            }
+        } while (input < 1 || input > 4);
 
-        // 4. NUMBER OF DAYS
-        int numberOfDays = Integer.parseInt(getUserInput("Input number of days: "));
+        // room table
+        String[][] roomArray = getRoomArray(input);
 
+        // room details
+        String[] roomDetails = getRoomTypeDetails(roomArray);
+        String roomPrefix = getRoomPrefix(input);
+        printTable(roomArray, roomPrefix);
 
-        // 5. DATES BASED ON NUMBER OF DAYS
-        int[] dateIdx = new int[10];
+        // guest name
+        guestName = getUserInput("Input Guest Name: ").trim();
 
-        for (int i = 0; i < numberOfDays; i++) {
-            String date = getUserInput("Date " + (i + 1) + ": ");
-            dateIdx[i] = getColIdx(date);
+        // number of days
+        numOfDays = Integer.parseInt(getUserInput("Input Number of Days: "));
+
+        // price
+        pricePerNight = Integer.parseInt(roomDetails[3]);
+        totalPrice = pricePerNight * numOfDays;
+
+        // dates
+        String[] datesToReserve = new String[numOfDays];
+
+        for (int i = 1; i <= numOfDays; i++) {
+            String date = getUserInput("Date " + i + ": ");
+            datesToReserve[i - 1] = date;
         }
 
-        // 6. RESERVATION SUCCESS
-        boolean successful = checkRoomStatus(selectedRoomType, guestName, dateIdx);
+        System.out.println("\nProcessing Reservation...");
 
-        // 7. LOOP PROCESS
-        System.out.println("Processing Reservation...");
+        boolean successful = false;
 
-        return false; // just a placeholder to avoid errors
+
+        for (int r = 0; r < roomArray.length; r++) {
+            boolean roomAvailable = false;
+
+            // check if room is available for specified dates
+            for (String date : datesToReserve) {
+                int c = getColIdx(date);
+
+                roomAvailable = roomArray[r][c] == null;
+            }
+
+            // if room is available, proceed with the reservation for that room
+            if (roomAvailable) {
+                for (String date : datesToReserve) {
+                    int c = getColIdx(date);
+
+                    roomArray[r][c] = "Booked|" + guestName;
+                }
+
+                roomNumber = roomPrefix + (100 + r + 1);
+
+                System.out.println("\nFound: " + roomNumber);
+
+                System.out.println(
+                        "Reservation Fee (Room Rate Only): " +
+                                "₱" + pricePerNight + " / night x " + numOfDays + " night/s = ₱" + totalPrice
+                );
+
+                successful = true;
+                break;
+            }
+        }
+
+        if (successful) {
+            System.out.println("\n┌────────────────────────────────────────────┐");
+            System.out.println("│             Reservation Summary            │");
+            System.out.println("├────────────────────────────────────────────┤");
+            System.out.printf("│ %-42s │%n", "Guest Name: " + guestName);
+            System.out.printf("│ %-42s │%n", "Room Type: " + roomDetails[0]);
+            System.out.printf("│ %-42s │%n", "Room Number: " + roomNumber);
+            System.out.printf("│ %-42s │%n", "Total Reservation Fee: ₱" + totalPrice);
+            System.out.println("└────────────────────────────────────────────┘");
+
+            System.out.println("Update Status: Room " + roomNumber + " is now set to 'Booked' by " + guestName);
+        } else {
+            System.out.println("Unable to process reservation...");
+        }
     }
 
     private static boolean checkIn() {
