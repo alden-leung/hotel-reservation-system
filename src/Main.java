@@ -52,7 +52,56 @@ public class Main {
     MAIN PROCESSES
      */
     private static void roomAvailability() {
+        while (true) {
+            int input;
 
+            // room availability menu
+            do {
+                System.out.println("\n┌───────────────────────────┐");
+                System.out.println("│  Check Room Availability  │");
+                System.out.println("├───────────────────────────┤");
+                System.out.println("│ 1. Standard Rooms         │");
+                System.out.println("│ 2. Deluxe Rooms           │");
+                System.out.println("│ 3. Suite Rooms            │");
+                System.out.println("├───────────────────────────┤");
+                System.out.println("│ 4. GO BACK                │");
+                System.out.println("└───────────────────────────┘");
+                input = Integer.parseInt(getUserInput("Enter your choice: "));
+
+                // invalid input message
+                if (input < 1 || input > 4) {
+                    System.out.println("\nPlease choose an option from 1 to 4 only...");
+                }
+            } while (input < 1 || input > 4);
+
+            // back to menu
+            if (input == 4) {
+                System.out.println("Back to Main Menu...");
+                break;
+            }
+
+            // room type details
+            String[] details;
+            switch (input) {
+                case 1 -> details = getRoomTypeDetails(standard);
+                case 2 -> details = getRoomTypeDetails(deluxe);
+                case 3 -> details = getRoomTypeDetails(suite);
+                default -> details = new String[4];
+            }
+
+            // summary
+            System.out.println("\n┌────────────────────────────┐");
+            System.out.println("│  Room Availability Status  │");
+            System.out.println("├────────────────────────────┤");
+            System.out.printf("│ %-26s │%n", "Room Type: " + details[0]);
+            System.out.printf("│ %-26s │%n", "Total Rooms: " + details[1]);
+            System.out.printf("│ %-26s │%n", "Available Rooms: " + details[2]);
+            System.out.printf("│ %-26s │%n", "Price Per Night: ₱" + details[3]);
+            System.out.println("└────────────────────────────┘");
+
+            // room table
+            printTable(getRoomArray(input), getRoomPrefix(input));
+        }
     }
 
     private static boolean makeReservation() {
@@ -157,39 +206,90 @@ public class Main {
         return day - 17;
     }
 
-    private static boolean checkRoomStatus(String[][] rooms, String guestName, int[] dateIdx) {
+    private static String[] getRoomTypeDetails(String[][] room) {
+        // room type
+        String roomType = room.length == 15 ? "Standard" : room.length == 10 ? "Deluxe" : "Suite";
 
-       for (int room = 0; room < rooms.length; room++) {
-           boolean availability = true; // assume room is available
+        // total rooms
+        int totalRooms = room.length;
 
-           // Checks for selected dates
-           for (int date = 0; date < dateIdx.length; date++) {
-               int day = dateIdx[date];
+        // available rooms
+        int availableRooms = 0;
+        for (String[] row : room) {
+            for (String col : row) {
+                if (col == null) {
+                    availableRooms++;
+                    break;
+                }
+            }
+        }
 
-               if (!rooms[room][day].equals("0")) {
-                   availability = false;
-                   break;
-               }
-           }
+        // room price per night
+        int price = roomType.equals("Standard") ? 2500 : roomType.equals("Deluxe") ? 4000 : 8000;
 
-           // If room is available -> assign to guest
-           if (availability) {
-               for (int date = 0; date < dateIdx.length; date++) {
-                   int day = dateIdx[date];
-                   rooms[room][day] = "1|" + guestName;
-               }
-
-               System.out.println("Reservation successful!" +
-                       "\nReserved Room: " + (room + 1));
-           }
-
-       }
-
-        return false; // no room found
+        return new String[]{
+                roomType,
+                String.valueOf(totalRooms),
+                String.valueOf(availableRooms),
+                String.valueOf(price)
+        };
     }
 
-    private static void printTable() {
-        //TODO: print table layout. (using the standard, deluxe, and suite 2D-arrays)
+    private static String[][] getRoomArray(int input) {
+        return switch (input) {
+            case 1 -> standard;
+            case 2 -> deluxe;
+            case 3 -> suite;
+            default -> new String[5][5];
+        };
+    }
 
+    private static String getRoomPrefix(int input) {
+        return switch (input) {
+            case 1 -> "S";
+            case 2 -> "D";
+            case 3 -> "T";
+            default -> "";
+        };
+    }
+
+    private static void printTable(String[][] table, String roomType) {
+        int rows = table.length;
+        int cols = table[0].length;
+
+        int cellWidth = 12;
+
+        String divider = "├" + ("─".repeat(cellWidth) + "┼").repeat(cols) + ("─").repeat(cellWidth) + "┤";
+
+        // column headers (dates)
+        System.out.println("\n" + "┌" + ("─".repeat(cellWidth) + "┬").repeat(cols) + ("─".repeat(cellWidth) + "┐"));
+        for (int i = -1; i < dates.length; i++) {
+            if (i == -1) {
+                System.out.print("│            ");
+            } else {
+                System.out.printf("│ %-10s ", dates[i]);
+            }
+        }
+        System.out.println("│");
+        System.out.println(divider);
+
+        // table values
+        for(int r = 0; r < rows; r++) {
+            for(int c = -1; c < cols; c++) {
+                if (c == -1) { // row header
+                    String room = roomType + (100 + r + 1);
+                    System.out.printf("│ %-10s ", room);
+                } else { // row values
+                    String val = table[r][c] == null ? "" : table[r][c].split("\\|")[0];
+                    System.out.printf("│ %-10s ", val);
+                }
+            }
+            System.out.println("│");
+
+            if (r != rows - 1) {
+                System.out.println(divider);
+            }
+        }
+        System.out.println("└" + ("─".repeat(cellWidth) + "┴").repeat(cols) + ("─".repeat(cellWidth) + "┘")); // footer
     }
 }
