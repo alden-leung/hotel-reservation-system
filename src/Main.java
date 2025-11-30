@@ -1,7 +1,6 @@
 import java.util.Scanner;
 
 public class Main {
-
     private static final Scanner kbd = new Scanner(System.in);         // user input reader
     private static final String[][] standard = new String[15][10];     // standard rooms for 10 days
     private static final String[][] deluxe = new String[10][10];       // deluxe rooms for 10 days
@@ -13,8 +12,40 @@ public class Main {
     };
 
     public static void main(String[] args) {
-        //TODO: User Interface
+        while(true) {
+            int input;
 
+            do {
+                System.out.println("\n┌─────────────────────────────────────┐");
+                System.out.println("│  Welcome to the Grand Hotel System  │");
+                System.out.println("├─────────────────────────────────────┤");
+                System.out.println("│ 1. Check Room Availability          │");
+                System.out.println("│ 2. Make New Reservation             │");
+                System.out.println("│ 3. Check-In Guest (Walk-in)         │");
+                System.out.println("│ 4. Check-Out Guest / Generate Bill  │");
+                System.out.println("├─────────────────────────────────────┤");
+                System.out.println("│ 5. Exit Application                 │");
+                System.out.println("└─────────────────────────────────────┘");
+                input = Integer.parseInt(getUserInput("Enter your choice: "));
+
+                if (input < 1 || input > 5) {
+                    System.out.println("\nPlease choose an option from 1 to 5 only...");
+                }
+            } while (input < 1 || input > 5);
+
+            if (input == 5) {
+                System.out.println("Exiting Application...");
+                System.exit(0);
+            }
+
+            switch (input) {
+                case 1 -> roomAvailability();
+                case 2 -> makeReservation();
+                case 3 -> checkIn();
+                case 4 -> checkOut();
+                default -> System.out.println("Unable to process request. Please try again.");
+            }
+        }
     }
 
     /*
@@ -35,40 +66,60 @@ public class Main {
         // 5. get the dates based on the number of days
         // 6. set successful = false
         // 7. Loop through every "ROOMS" (i.e. the "ROWS" of the array), for each loop:
-        //      8.1. Check the columns that matches the dates
-        //      8.2. If those columns are available:
-        //              8.2.1 Assign the guest with the current "ROOM" for those columns (i.e. Dates) in the format ("1|<name>")
-        //              8.2.2 Set successful = true
-        //              8.2.3 Stop the loop
-        // 9. If successful = false, print a statement to notify guest that no rooms are available for those dates
+        //      7.1. Check the columns that matches the dates
+        //      7.2. If those columns are available:
+        //              7.2.1 Assign the guest with the current "ROOM" for those columns (i.e. Dates) in the format ("1|<name>")
+        //              7.2.2 Set successful = true
+        //              7.2.3 Stop the loop
+        // 8. If successful = false, print a statement to notify guest that no rooms are available for those dates
 
+        //--------------------------------------------------------------------------------------------------------------
+
+        // 1. GUEST NAME
         String guestName = getUserInput("Input Guest Name: ");
-        String roomType = "";
+        String roomType;
+        String[][] selectedRoomType = null;
 
+        // 2. ROOM TYPE
         do {
             roomType = getUserInput("Input Room Type: (1. Standard, 2. Deluxe, 3. Suite): ");
 
             switch (roomType) {
-                case "1" -> checkRoomStatus(standard);
-                case "2" -> checkRoomStatus(deluxe);
-                case "3" -> checkRoomStatus(suite);
+                case "1" ->  {
+                    selectedRoomType = standard;
+                }
+                case "2" -> {
+                    selectedRoomType = deluxe;
+                }
+                case "3" -> {
+                    selectedRoomType = suite;
+                }
                 default -> {
                     System.out.println("Invalid room type, try again");
                     roomType = "False";
                 }
             }
-
         } while (roomType.equals("False"));
 
+        // 3. DISPLAY TABLE
         // printTable()
 
+        // 4. NUMBER OF DAYS
         int numberOfDays = Integer.parseInt(getUserInput("Input number of days: "));
-        String[] dates = new String[10];
+
+
+        // 5. DATES BASED ON NUMBER OF DAYS
+        int[] dateIdx = new int[10];
 
         for (int i = 0; i < numberOfDays; i++) {
-            dates[i] = getUserInput("Date " + (i + 1) + ": ");
+            String date = getUserInput("Date " + (i + 1) + ": ");
+            dateIdx[i] = getColIdx(date);
         }
 
+        // 6. RESERVATION SUCCESS
+        boolean successful = checkRoomStatus(selectedRoomType, guestName, dateIdx);
+
+        // 7. LOOP PROCESS
         System.out.println("Processing Reservation...");
 
         return false; // just a placeholder to avoid errors
@@ -103,13 +154,38 @@ public class Main {
 
     private static int getColIdx(String date) {
         int day = Integer.parseInt(date.split("/")[1].trim());
-
         return day - 17;
     }
 
-    private static String checkRoomStatus(String[][] room) {
+    private static boolean checkRoomStatus(String[][] rooms, String guestName, int[] dateIdx) {
 
-        return ""; // just a placeholder to avoid errors
+       for (int room = 0; room < rooms.length; room++) {
+           boolean availability = true; // assume room is available
+
+           // Checks for selected dates
+           for (int date = 0; date < dateIdx.length; date++) {
+               int day = dateIdx[date];
+
+               if (!rooms[room][day].equals("0")) {
+                   availability = false;
+                   break;
+               }
+           }
+
+           // If room is available -> assign to guest
+           if (availability) {
+               for (int date = 0; date < dateIdx.length; date++) {
+                   int day = dateIdx[date];
+                   rooms[room][day] = "1|" + guestName;
+               }
+
+               System.out.println("Reservation successful!" +
+                       "\nReserved Room: " + (room + 1));
+           }
+
+       }
+
+        return false; // no room found
     }
 
     private static void printTable() {
