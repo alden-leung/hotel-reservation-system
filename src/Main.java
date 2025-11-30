@@ -428,32 +428,4 @@ public class Main {
         }
         System.out.println("└" + ("─".repeat(cellWidth) + "┴").repeat(cols) + ("─".repeat(cellWidth) + "┘")); // footer
     }
-
-    private static String findRoomNum() {
-        return "placeholder"; // just a placeholder to avoid errors
-    }
-
-    private static boolean processPayment(int bill, int nightBooked, String guestName, String roomType, Scanner kbd) {
-    double totalAmount = bill * nightBooked;
-    double paymentAmount = 0;
-
-    do {
-        System.out.print("Please proceed to payment of Php " + totalAmount + ": ");
-        paymentAmount = Double.parseDouble(kbd.nextLine());
-
-        if (paymentAmount >= totalAmount) {
-            System.out.println("Payment Successful. Generating receipt...");
-            System.out.println("Check-In Successful! Guest " + guestName +
-                                " is now occupying a " + roomType + " room.");
-            System.out.println("change:" + (paymentAmount - totalAmount));
-            return true;
-        } else {
-            System.out.println("Insufficient payment. Try again.");
-        }
-
-    } while (paymentAmount < totalAmount);
-
-    return false;  // this will never run, but required by Java
-    }
-
 }
