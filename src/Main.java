@@ -212,8 +212,8 @@ public class Main {
 
     private static boolean checkIn() {
         String roomType = "";
-        int bill = 03, input, numOfNights;
-        boolean available = true;  
+        int bill = 03, input, numOfNights, payment;
+       
         String guestName = "", roomNumber = "";
         
          do {
@@ -267,31 +267,47 @@ public class Main {
 
         System.out.println("Processing Walk-in Check-In... Checking for available " + roomType + " rooms"+ "(Php "+bill +"/night)...");
     // check for available room and update status
-    
-        if (Integer.parseInt(info[2]) > 0){
-            for (int rows = 0; rows <= 0; rows++) {
-                for(int columns = 0; columns <numOfNights; columns++){
-                    roomArray[rows][columns] = "booked|" + guestName;
-                };
-        }
-
-            boolean isPaid = processPayment(bill, numOfNights, guestName, roomType, kbd);
-                System.out.println("Update Status: Room" + roomPrefix + " is now occupied by " + guestName + ".");
-            if (isPaid) {
-                System.out.println("Proceeding with check-in...");
-            } else {
-                System.out.println("Cannot continue. Guest must pay first.");
+        for (int rows = 0; rows < roomArray.length; rows++){ // for the rows ahh
+            if (roomArray[rows][0] == null){ // check if the first column is available
+                //counts available nights
+                int availableNights = 0;
+                for (int cols = 0; cols < roomArray[0].length; cols++){
+                    if (roomArray[rows][cols] == null){
+                        availableNights++;
+                    }else{
+                        break; //exit loop if occupied
+                    }
+                }
+                
+                //checks if nights book is less than or equal to available nights
+                if (numOfNights <= availableNights){
+                    //book the room for the number of nights
+                    for (int cols = 0; cols < numOfNights; cols++){
+                        roomArray[rows][cols] = "Occupied|" + guestName;
+                        roomNumber = roomPrefix + (100 + rows + 1);
+                    }
+                    System.out.println("Found: " + roomNumber + ".");
+                    //process payment
+                    
+                    do{
+                        payment = Integer.parseInt(getUserInput("Input Payment(Room Only, Php " + bill + " * " + numOfNights +"): "));
+                        if (payment >= bill * numOfNights){
+                            System.out.println("Payment Successful." +
+                                        "\n--- Check-In Sccessful ---" +
+                                        "\nUpdate Status: Room " + roomNumber + " is now set to 'Occupied' by " + guestName + ".");
+                            System.out.println("Check-In Successful! Guest " + guestName +
+                                                " is now occupying Room " + roomNumber + " room.");
+                            return true;
+                        }else{
+                            System.out.println("Insufficient payment. Try again.");
+                        }
+                    }while (payment < bill * numOfNights);
+                    break;
+                }
+                
             }
-            available = false;
-            return false;
+            System.out.println("No available rooms for the requested nights.");
         }
-        
-        
- 
-
-    // 7. Display check-in successful with guest name and room number
-        System.out.println("--- Check-In Successful ---");
-        System.out.println("Guest Name: " + guestName + " Is now occupying Room" + roomNumber + " for " + numOfNights + " nights.");
     return false;// just a placeholder to avoid errors
 }
 
@@ -440,8 +456,4 @@ public class Main {
     return false;  // this will never run, but required by Java
     }
 
-    private static boolean updateRoomStatus() {
-
-        return false; // just a placeholder to avoid errors
-    }
 }
