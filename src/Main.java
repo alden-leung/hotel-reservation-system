@@ -290,7 +290,7 @@ public class Main {
                     //process payment
                     
                     do{
-                        payment = Integer.parseInt(getUserInput("Input Payment(Room Only, Php " + bill + " * " + numOfNights +"): "));
+                        payment = Integer.parseInt(getUserInput("Input Payment(Room Only, Php " + bill + " * " + numOfNights +" = " +bill*numOfNights"): "));
                         if (payment >= bill * numOfNights){
                             System.out.println("Payment Successful." +
                                         "\n--- Check-In Sccessful ---" +
