@@ -256,7 +256,6 @@ public class Main {
     
     // room details
         String[][] roomArray = getRoomArray(input);
-        String[] info = getRoomTypeDetails(roomArray);
         String roomPrefix = getRoomPrefix(input);
     // guest name 
         guestName = getUserInput("Input Guest Name: ");
