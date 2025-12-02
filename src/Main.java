@@ -52,7 +52,10 @@ Algorithm:
 5.5 Create method that makes the room status "Available" in the system.
 
 6. Payment
-6.1 Calculate the amount input
+6.1 Prompt the user to input the payment amount.
+6.2 If payment is insufficient, prompts the user to try again until valid amount.
+6.3 Once inputs is valid, check if there's change due, if so, calculates and display the change.
+6.4 Print a receipt with the guest name, room, total amount due, amount paid, and if applicable, the change.
 */
 
 import java.util.Scanner;
@@ -461,7 +464,7 @@ public class Main {
     System.out.println("Subtotal: \t\t\t₱" + subtotal);
     System.out.println("Fixed Service Fee: \t₱" + serviceFee);
     System.out.println("Tax (10%): \t\t\t₱" + tax);
-    System.out.println("TOTAL DUE AFTER PREPAYMENT: \t₱" + total);
+    System.out.println("Total Due: \t\t\t₱" + total);
     System.out.println("─────────────────────────");
 
     payment(room, realGuestName, total);
