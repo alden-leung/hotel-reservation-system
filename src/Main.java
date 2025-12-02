@@ -10,6 +10,7 @@ Members:
 
 Algorithm
 
+
 1. Main Menu
 2. Check Room Availability
 3. Make New Reservation
