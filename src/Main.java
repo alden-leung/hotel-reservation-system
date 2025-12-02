@@ -501,11 +501,11 @@ public class Main {
             System.out.print("Input Payment Amount: ");
             payment = Double.parseDouble(kbd.nextLine());
             if (payment<bill) {
-                System.out.println("Amount input is less than balance.");
+                System.out.println("Insufficient amount. Try again.");
             }
         } while(payment < 0 || payment < bill);
 
-        System.out.println("Payment: P"+payment+" received.");
+        System.out.println("Payment: ₱"+payment+" received.");
         if(payment>bill) {
             change = payment-bill;
             System.out.println("Change Calculation: ₱" + payment + " - ₱" + bill + " = ₱" + change);
@@ -622,7 +622,7 @@ public class Main {
     }
     private static String[] getCheckoutInfoArray(String roomNumber) {
         char prefix = roomNumber.charAt(0); //letter of room
-        int row = Integer.parseInt(roomNumber.substring(1)) - 100 - 1; //converts number part to INDEX
+        int row = Integer.parseInt(roomNumber.substring(1)) - 100 - 1; //converts rNumber to INDEX
 
         String[][] roomArray;
         int price;
