@@ -53,9 +53,6 @@ public class Main {
             "11/21/2025", "11/22/2025", "11/23/2025", "11/24/2025",
             "11/25/2025", "11/26/2025"
     };
-    static {
-        initializeTables(); // AUTOMATED AVAILABLE STATUS
-    }
     public static void main(String[] args) {
         while(true) {
             int input;
@@ -214,7 +211,7 @@ public class Main {
             for (String date : datesToReserve) {
                 int c = getColIdx(date);
 
-                roomAvailable = roomArray[r][c] == "Available";
+                roomAvailable = roomArray[r][c] == null;
             }
 
             // if room is available, proceed with the reservation for that room
@@ -307,16 +304,16 @@ public class Main {
         
         
     // number of nights
-        numOfNights = Integer.parseInt(getUserInput("input nights booked:"));
+        numOfNights = Integer.parseInt(getUserInput("input nights booked: "));
 
         System.out.println("Processing Walk-in Check-In... Checking for available " + roomType + " rooms"+ "(Php "+bill +"/night)...");
     // check for available room and update status
         for (int rows = 0; rows < roomArray.length; rows++){ // for the rows ahh
-            if (roomArray[rows][0] == "Available"){ // check if the first column is available
+            if (roomArray[rows][0] == null){ // check if the first column is available
                 //counts available nights
                 int availableNights = 0;
                 for (int cols = 0; cols < roomArray[0].length; cols++){
-                    if (roomArray[rows][cols] == "Available"){
+                    if (roomArray[rows][cols] == null){
                         availableNights++;
                     }else{
                         break; //exit loop if occupied
@@ -393,15 +390,13 @@ public class Main {
         double tax = totalBeforeTax * 0.10;
         double total = totalBeforeTax + tax;
 
-        System.out.println("─────────────────────────");
-        System.out.println("Bill Calculation");
-        System.out.println("Rate Per Night: \t₱" + price);
-        System.out.println("Nights Stayed:\t\t" + nights);
-        System.out.println("Subtotal: \t\t\t₱" + subtotal);
-        System.out.println("Fixed Service Fee: \t₱" + serviceFee);
-        System.out.println("Tax (10%): \t\t\t₱" + tax);
-        System.out.println("TOTAL DUE: \t\t\t₱" + total);
-        System.out.println("─────────────────────────");
+        System.out.println("\n--- Bill Calculation ---");
+        System.out.println("Rate Per Night: ₱" + price);
+        System.out.println("Nights Stayed: " + nights);
+        System.out.println("Subtotal: ₱" + subtotal);
+        System.out.println("Fixed Service Fee: ₱" + serviceFee);
+        System.out.println("Tax (10%): ₱" + tax);
+        System.out.println("TOTAL DUE: ₱" + total);
 
         System.out.println(payment(room, realGuestName, total));
 
@@ -469,7 +464,7 @@ public class Main {
         int availableRooms = 0;
         for (String[] row : room) {
             for (String col : row) {
-                if (col == "Available") {
+                if (col == null) {
                     availableRooms++;
                     break;
                 }
@@ -623,18 +618,5 @@ public class Main {
             int c = Integer.parseInt(col.trim());
             roomArray[row][c] = null;
         }
-    }
-    private static void initializeTables(){
-        for (int i = 0; i < standard.length; i++)
-            for (int j = 0; j < 10; j++)
-                standard[i][j] = "Available";
-
-        for (int i = 0; i < deluxe.length; i++)
-            for (int j = 0; j < 10; j++)
-                deluxe[i][j] = "Available";
-
-        for (int i = 0; i < suite.length; i++)
-            for (int j = 0; j < 10; j++)
-                suite[i][j] = "Available";
     }
 }
