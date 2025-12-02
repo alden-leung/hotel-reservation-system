@@ -31,7 +31,11 @@ Algorithm:
 4.7 If no suitable room is found → print no availability and return false.
 
 5. Check-Out Guest/ Generate Bill
-a.
+5.1 Ask user to input their room number & name (for extra security)
+5.2 Create a validation system that determines if the room is occupied & name is valid
+5.3 Display room fee, number of nights stayed, 10% tax, fixed service fee, and final bill
+5.4 Proceed to payment method
+5.5 Create method that makes the room status "Available" in the system.
 
 6. Payment
 
@@ -615,7 +619,7 @@ public class Main {
 
         for (String col : colIndexes) {
             int c = Integer.parseInt(col.trim());
-            roomArray[row][c] = null;
+            roomArray[row][c] = "Available";
         }
     }
     private static void initializeTables(){
