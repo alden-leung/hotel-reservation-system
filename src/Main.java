@@ -423,6 +423,7 @@ public class Main {
     do {
         room = getUserInput("Enter room number for checkout: ").toUpperCase().trim();
         status = getCheckoutInfoArray(room);
+        
         if (status == null) {
             System.out.println("Invalid room or no guest found. Try again.\n");
         } else {
