@@ -52,7 +52,7 @@ Algorithm:
 5.5 Create method that makes the room status "Available" in the system.
 
 6. Payment
-
+6.1 Calculate the amount input
 */
 
 import java.util.Scanner;
@@ -390,7 +390,7 @@ public class Main {
     }while (finish);
         
 
-    // processing print to assure the user
+    // procesing print to assure the user
         System.out.println("Processing Walk-in Check-In... Checking for available " + roomType + " rooms"+ "(Php "+bill +"/night)...");
 
     // check for available room and update status
@@ -590,12 +590,12 @@ public class Main {
         String divider = "├" + ("─".repeat(cellWidth) + "┼").repeat(cols) + ("─").repeat(cellWidth) + "┤";
 
         // column headers (dates)
-        System.out.println("\n" + "┌" + ("─".repeat(cellWidth) + "┬").repeat(cols) + ("─".repeat(cellWidth) + "┐")); // Header
+        System.out.println("\n" + "┌" + ("─".repeat(cellWidth) + "┬").repeat(cols) + ("─".repeat(cellWidth) + "┐"));
         for (int i = -1; i < dates.length; i++) {
             if (i == -1) {
-                System.out.print("│            ");       // Blank Part First Row, First Column
+                System.out.print("│            ");
             } else {
-                System.out.printf("│ %-10s ", dates[i]); //Formula for dates section
+                System.out.printf("│ %-10s ", dates[i]);
             }
         }
         System.out.println("│");
@@ -627,21 +627,11 @@ public class Main {
         String[][] roomArray;
         int price;
 
-        if (prefix == 'S') {
-            roomArray = standard;
-            price = 2500;
-        } else {
-            if (prefix == 'D') {
-                roomArray = deluxe;
-                price = 4000;
-            } else {
-                if (prefix == 'T') {
-                    roomArray = suite;
-                    price = 8000;
-                } else {
-                    return null;
-                }
-            }
+        switch (prefix) {
+            case 'S' -> { roomArray = standard; price = 2500; }
+            case 'D' -> { roomArray = deluxe;  price = 4000; }
+            case 'T' -> { roomArray = suite;   price = 8000; }
+            default -> { return null; }
         }
 
         String guestName = null;
@@ -662,7 +652,7 @@ public class Main {
 
             //guest stay determination
             if (guestName == null) {
-                guestName = name; //save
+                guestName = name; //store variable
                 nights = 1;
                 occColumns = c + "";
             } else if (guestName.equals(name)) {
