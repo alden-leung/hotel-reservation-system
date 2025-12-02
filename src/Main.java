@@ -627,21 +627,11 @@ public class Main {
         String[][] roomArray;
         int price;
 
-        if (prefix == 'S') {
-            roomArray = standard;
-            price = 2500;
-        } else {
-            if (prefix == 'D') {
-                roomArray = deluxe;
-                price = 4000;
-            } else {
-                if (prefix == 'T') {
-                    roomArray = suite;
-                    price = 8000;
-                } else {
-                    return null;
-                }
-            }
+        switch (prefix) {
+            case 'S' -> { roomArray = standard; price = 2500; }
+            case 'D' -> { roomArray = deluxe;  price = 4000; }
+            case 'T' -> { roomArray = suite;   price = 8000; }
+            default -> { return null; }
         }
 
         String guestName = null;
