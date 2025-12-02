@@ -326,12 +326,12 @@ public class Main {
     // number of nights bro wants to sleep in the hotel
     boolean finish = true;
     do{
-        numOfNights = Integer.parseInt(getUserInput("input nights booked: "));
+        numOfNights = Integer.parseInt(getUserInput("Input nights booked: "));
 
         if (numOfNights > 0 ){
             finish = false;
         }else{
-            System.out.println("invalid input try again.");
+            System.out.println("Invalid input, try again.");
         }   
     }while (finish);
         
@@ -604,7 +604,7 @@ public class Main {
             String status = parts[0];
             String name = parts[1];
 
-            if (!status.equals("Occupied") && !status.equals("Booked")) continue;
+            if (!status.equals("Occupied") && !status.equals("Booked")) continue; //validation
 
             //guest stay determination
             if (guestName == null) {
