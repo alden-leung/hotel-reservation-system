@@ -345,11 +345,10 @@ public class Main {
                         }
                     }while (payment < bill * numOfNights);
                     break;
-                } 
-            }else{
-                    System.out.println("No available rooms for the requested nights.");
                 }
+            }
         }
+        System.out.println("No available rooms for the requested nights.");
     return false;// just a placeholder to avoid errors
 }
 
