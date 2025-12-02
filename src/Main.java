@@ -1,5 +1,6 @@
 /*
-/*
+Project Name: Hotel Reservation System Simulation
+Date: December 3, 2025
 Members:
 1. Asuero, Luke Sebastian Lee
 2. Gabriel, Erron John A.
