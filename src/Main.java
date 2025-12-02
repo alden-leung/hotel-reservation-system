@@ -268,10 +268,10 @@ public class Main {
 
     private static boolean checkIn() {
         String roomType = "";
-        int bill = 03, input, numOfNights, payment;
+        int bill = 0, input, numOfNights, payment;
        
         String guestName, roomNumber = "";
-        
+        //menu display
          do {
             System.out.println("\n┌────────────────────────┐");
             System.out.println("│Check-In Guest Walk (In)│");
@@ -294,7 +294,7 @@ public class Main {
                 System.out.println("\nPlease choose an option from 1 to 4 only...");
             }
         } while (input < 1 || input > 4);
-
+            // switch case that  change the value of bill and roomType
             switch (input) {
                 case 1 -> {
                             bill = 2500; 
@@ -312,27 +312,38 @@ public class Main {
     // room details
         String[][] roomArray = getRoomArray(input);
         String roomPrefix = getRoomPrefix(input);
+
     // guest name 
-    
     do {
-        guestName = getUserInput("Input Guest Name: ").trim();
+        guestName = getUserInput("Input Guest Name: ").trim();// input of user
     
-        if (guestName.isEmpty()) {
-            System.out.println("Guest name cannot be empty. Please try again.");
+        if (guestName.isEmpty()) {//validation of the name of the user if they gave a blank
+            System.out.println("Guest name cannot be empty. Please try again."); 
         }
 
         } while (guestName.isEmpty());
         
-        
-    // number of nights
+    // number of nights bro wants to sleep in the hotel
+    boolean finish = true;
+    do{
         numOfNights = Integer.parseInt(getUserInput("input nights booked: "));
 
+        if (numOfNights > 0 ){
+            finish = false;
+        }else{
+            System.out.println("invalid input try again.");
+        }   
+    }while (finish);
+        
+
+    // procesing print to assure the user
         System.out.println("Processing Walk-in Check-In... Checking for available " + roomType + " rooms"+ "(Php "+bill +"/night)...");
+
     // check for available room and update status
         for (int rows = 0; rows < roomArray.length; rows++){ // for the rows ahh
             if (roomArray[rows][0] == null){ // check if the first column is available
                 //counts available nights
-                int availableNights = 0;
+                int availableNights = 0; //initializing the available nights
                 for (int cols = 0; cols < roomArray[0].length; cols++){
                     if (roomArray[rows][cols] == null){
                         availableNights++;
@@ -349,8 +360,8 @@ public class Main {
                         roomNumber = roomPrefix + (100 + rows + 1);
                     }
                     System.out.println("Found: " + roomNumber + ".");
+
                     //process payment
-                    
                     do{
                         payment = Integer.parseInt(getUserInput("Input Payment(Room Only, Php " + bill + " * " + numOfNights +" = " +bill*numOfNights + "): "));
                         if (payment >= bill * numOfNights){
@@ -460,7 +471,6 @@ public class Main {
     HELPER FUNCTIONS
      */
     private static String getUserInput(String message) {
-        //TODO: print input message and return user input as a String
         System.out.print(message);
         return kbd.nextLine();
     }
@@ -468,11 +478,6 @@ public class Main {
     private static int getColIdx(String date) {
         int day = Integer.parseInt(date.split("/")[1].trim());
         return day - 17;
-    }
-
-    private static String checkRoomStatus(String[][] room) {
-
-        return ""; // just a placeholder to avoid errors
     }
 
     private static String[] getRoomTypeDetails(String[][] room) {
@@ -562,8 +567,8 @@ public class Main {
         System.out.println("└" + ("─".repeat(cellWidth) + "┴").repeat(cols) + ("─".repeat(cellWidth) + "┘")); // footer
     }
     private static String[] getCheckoutInfoArray(String roomNumber) {
-        char prefix = roomNumber.charAt(0);
-        int row = Integer.parseInt(roomNumber.substring(1)) - 100 - 1;
+        char prefix = roomNumber.charAt(0); //letter of room
+        int row = Integer.parseInt(roomNumber.substring(1)) - 100 - 1; //converts number part to INDEX
 
         String[][] roomArray;
         int price;
@@ -589,8 +594,9 @@ public class Main {
         String occColumns = "";
         int nights = 0;
 
+        //10 day loop
         for (int c = 0; c < 10; c++) {
-            if (roomArray[row][c] == null) continue;
+            if (roomArray[row][c] == null) continue; //skip empty
 
             String[] parts = roomArray[row][c].split("\\|");
             if (parts.length < 2) continue;
@@ -600,8 +606,9 @@ public class Main {
 
             if (!status.equals("Occupied") && !status.equals("Booked")) continue;
 
+            //guest stay determination
             if (guestName == null) {
-                guestName = name;
+                guestName = name; //save
                 nights = 1;
                 occColumns = String.valueOf(c);
             } else if (guestName.equals(name)) {
@@ -626,7 +633,7 @@ public class Main {
     private static void clearRoomArray(String roomNumber, int row, String colList) {
         char prefix = roomNumber.charAt(0);
         String[][] roomArray;
-
+        //room determination
         switch (prefix) {
             case 'S' -> roomArray = standard;
             case 'D' -> roomArray = deluxe;
