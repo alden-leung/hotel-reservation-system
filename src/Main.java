@@ -54,7 +54,7 @@ public class Main {
             "11/25/2025", "11/26/2025"
     };
     static {
-        initializeTables();
+        initializeTables(); // AUTOMATED AVAILABLE STATUS
     }
     public static void main(String[] args) {
         while(true) {
@@ -214,7 +214,7 @@ public class Main {
             for (String date : datesToReserve) {
                 int c = getColIdx(date);
 
-                roomAvailable = roomArray[r][c] == null;
+                roomAvailable = roomArray[r][c] == "Available";
             }
 
             // if room is available, proceed with the reservation for that room
@@ -312,11 +312,11 @@ public class Main {
         System.out.println("Processing Walk-in Check-In... Checking for available " + roomType + " rooms"+ "(Php "+bill +"/night)...");
     // check for available room and update status
         for (int rows = 0; rows < roomArray.length; rows++){ // for the rows ahh
-            if (roomArray[rows][0] == null){ // check if the first column is available
+            if (roomArray[rows][0] == "Available"){ // check if the first column is available
                 //counts available nights
                 int availableNights = 0;
                 for (int cols = 0; cols < roomArray[0].length; cols++){
-                    if (roomArray[rows][cols] == null){
+                    if (roomArray[rows][cols] == "Available"){
                         availableNights++;
                     }else{
                         break; //exit loop if occupied
@@ -600,8 +600,8 @@ public class Main {
                 String.valueOf(nights),    // [1]
                 String.valueOf(price),     // [2]
                 String.valueOf(subtotal),  // [3]
-                String.valueOf(row),         // [4]
-                occColumns               // [5] this adds column list
+                String.valueOf(row),       // [4]
+                occColumns                 // [5] this adds column list
         };
     }
     private static void clearRoomArray(String roomNumber, int row, String colList) {
