@@ -626,7 +626,7 @@ public class Main {
     for (int c = 0; c < 10; c++) {
         if (roomArray[row][c] == null) continue;
 
-        String[] parts = roomArray[row][c].split("\\|");
+        String[] parts = roomArray[row][c].split("\\|");    //checks occupied or booked | name
         if (parts.length < 2) continue;
 
         String status = parts[0];
