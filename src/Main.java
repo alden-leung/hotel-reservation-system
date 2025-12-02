@@ -423,17 +423,18 @@ public class Main {
     do {
         room = getUserInput("Enter room number for checkout: ").toUpperCase().trim();
         status = getCheckoutInfoArray(room);
-        
+
         if (status == null) {
             System.out.println("Invalid room or no guest found. Try again.\n");
-        } else {
-            realGuestName = status[0];
-            guestInput = getUserInput("Enter guest name for verification: ").trim();
+            continue;
+        }
 
-            if (!guestInput.equalsIgnoreCase(realGuestName)) {
-                System.out.println("Guest name does not match the room record. Try again.\n");
-                status = null;
-            }
+        realGuestName = status[0];
+        guestInput = getUserInput("Enter guest name for verification: ").trim();
+
+        if (!guestInput.equalsIgnoreCase(realGuestName)) {
+            System.out.println("Guest name does not match the room record. Try again.\n");
+            status = null;
         }
     } while (status == null);
     
