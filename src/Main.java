@@ -423,6 +423,7 @@ public class Main {
     String[] status;
     String realGuestName = "";
         // room & name validation
+
     do {
         room = getUserInput("Enter room number for checkout: ").toUpperCase().trim();
         status = getCheckoutInfoArray(room);
@@ -441,6 +442,7 @@ public class Main {
         }
     } while (status == null);
     
+    //extracting values from status array
     int nights = Integer.parseInt(status[1]);
     double price = Double.parseDouble(status[2]);
     double subtotal = Double.parseDouble(status[3]);
@@ -448,10 +450,11 @@ public class Main {
     String occupiedColString = status[5];
     double paidAmount = Double.parseDouble(status[6]);
 
+    //calculate total 
     double serviceFee = 250;
     double totalBeforeTax = subtotal + serviceFee;
-    double tax = totalBeforeTax * 0.10;
-    double total = totalBeforeTax + tax;
+    double tax = totalBeforeTax * 0.10; // add 10% tax
+    double total = totalBeforeTax + tax; // subtract payment made at check-in
 
     // Deduct payment made at check-in
     total -= paidAmount;
