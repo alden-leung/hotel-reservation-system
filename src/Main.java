@@ -547,8 +547,8 @@ public class Main {
         System.out.println("└" + ("─".repeat(cellWidth) + "┴").repeat(cols) + ("─".repeat(cellWidth) + "┘")); // footer
     }
     private static String[] getCheckoutInfoArray(String roomNumber) {
-        char prefix = roomNumber.charAt(0);
-        int row = Integer.parseInt(roomNumber.substring(1)) - 100 - 1;
+        char prefix = roomNumber.charAt(0); //letter of room
+        int row = Integer.parseInt(roomNumber.substring(1)) - 100 - 1; //converts number part to INDEX
 
         String[][] roomArray;
         int price;
@@ -574,8 +574,9 @@ public class Main {
         String occColumns = "";
         int nights = 0;
 
+        //10 day loop
         for (int c = 0; c < 10; c++) {
-            if (roomArray[row][c] == null) continue;
+            if (roomArray[row][c] == null) continue; //skip empty
 
             String[] parts = roomArray[row][c].split("\\|");
             if (parts.length < 2) continue;
@@ -585,8 +586,9 @@ public class Main {
 
             if (!status.equals("Occupied") && !status.equals("Booked")) continue;
 
+            //guest stay determination
             if (guestName == null) {
-                guestName = name;
+                guestName = name; //save
                 nights = 1;
                 occColumns = String.valueOf(c);
             } else if (guestName.equals(name)) {
@@ -611,7 +613,7 @@ public class Main {
     private static void clearRoomArray(String roomNumber, int row, String colList) {
         char prefix = roomNumber.charAt(0);
         String[][] roomArray;
-
+        //room determination
         switch (prefix) {
             case 'S' -> roomArray = standard;
             case 'D' -> roomArray = deluxe;
