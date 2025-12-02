@@ -474,7 +474,6 @@ public class Main {
         double totalBeforeTax = subtotal + serviceFee;
         double tax = totalBeforeTax * 0.10;
         double total = totalBeforeTax + tax;
-
         System.out.println("─────────────────────────");
         System.out.println("Bill Calculation");
         System.out.println("Rate Per Night: \t₱" + price);
@@ -623,7 +622,7 @@ public class Main {
     private static String[] getCheckoutInfoArray(String roomNumber) {
         char prefix = roomNumber.charAt(0); //letter of room
         int row = Integer.parseInt(roomNumber.substring(1)) - 100 - 1; //converts number part to INDEX
-
+        
         String[][] roomArray;
         int price;
 
@@ -684,6 +683,7 @@ public class Main {
                 occColumns                 // [5] this adds column list
         };
     }
+
     private static void clearRoomArray(String roomNumber, int row, String colList) {
         char prefix = roomNumber.charAt(0);
         String[][] roomArray;
