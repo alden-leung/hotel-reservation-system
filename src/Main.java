@@ -7,7 +7,7 @@ Group 3 Members:
 1. Asuero, Luke Sebastian Lee
 2. Gabriel, Erron John A.
 3. Intendencia, Jared Wayne L.
-4. Lardizabal, Elois Althea
+4. Lardizabal, Eloise Althea
 5. Leung, Alden
 6. Rodriguez, Gabriel
 7. Tumolva, Iana Klarize
