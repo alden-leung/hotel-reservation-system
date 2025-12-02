@@ -49,7 +49,9 @@ public class Main {
             "11/21/2025", "11/22/2025", "11/23/2025", "11/24/2025",
             "11/25/2025", "11/26/2025"
     };
-
+    static {
+        initializeTables();
+    }
     public static void main(String[] args) {
         while(true) {
             int input;
@@ -615,5 +617,18 @@ public class Main {
             int c = Integer.parseInt(col.trim());
             roomArray[row][c] = null;
         }
+    }
+    private static void initializeTables(){
+        for (int i = 0; i < standard.length; i++)
+            for (int j = 0; j < 10; j++)
+                standard[i][j] = "Available";
+
+        for (int i = 0; i < deluxe.length; i++)
+            for (int j = 0; j < 10; j++)
+                deluxe[i][j] = "Available";
+
+        for (int i = 0; i < suite.length; i++)
+            for (int j = 0; j < 10; j++)
+                suite[i][j] = "Available";
     }
 }
