@@ -463,7 +463,7 @@ public class Main {
         int availableRooms = 0;
         for (String[] row : room) {
             for (String col : row) {
-                if (col == null) {
+                if (col == "Available") {
                     availableRooms++;
                     break;
                 }
