@@ -420,6 +420,7 @@ public class Main {
     String[] status;
     String realGuestName = "";
         // room & name validation
+        
     do {
         room = getUserInput("Enter room number for checkout: ").toUpperCase().trim();
         status = getCheckoutInfoArray(room);
