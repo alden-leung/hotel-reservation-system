@@ -52,7 +52,7 @@ Algorithm:
 5.5 Create method that makes the room status "Available" in the system.
 
 6. Payment
-
+6.1 Calculate the amount input
 */
 
 import java.util.Scanner;
@@ -478,11 +478,11 @@ public class Main {
             System.out.print("Input Payment Amount: ");
             payment = Double.parseDouble(kbd.nextLine());
             if (payment<bill) {
-                System.out.println("Amount input is less than balance.");
+                System.out.println("Insufficient amount. Try again.");
             }
         } while(payment < 0 || payment < bill);
 
-        System.out.println("Payment: P"+payment+" received.");
+        System.out.println("Payment: ₱"+payment+" received.");
         if(payment>bill) {
             change = payment-bill;
             System.out.println("Change Calculation: ₱" + payment + " - ₱" + bill + " = ₱" + change);
@@ -599,12 +599,18 @@ public class Main {
     }
 
     private static String[] getCheckoutInfoArray(String roomNumber) {
+<<<<<<< HEAD
     char prefix = roomNumber.charAt(0);
     int row = Integer.parseInt(roomNumber.substring(1)) - 100 - 1;
+=======
+        char prefix = roomNumber.charAt(0); //letter of room
+        int row = Integer.parseInt(roomNumber.substring(1)) - 100 - 1; //converts rNumber to INDEX
+>>>>>>> de266742c6a16620c395eb5eb02a09da03ae94a3
 
     String[][] roomArray;
     int price;
 
+<<<<<<< HEAD
     if (prefix == 'S') { roomArray = standard; price = 2500; }
     else if (prefix == 'D') { roomArray = deluxe; price = 4000; }
     else if (prefix == 'T') { roomArray = suite; price = 8000; }
@@ -646,6 +652,53 @@ public class Main {
             String.valueOf(row),      // [4]
             occColumns,               // [5]
             String.valueOf(paidAmount) // [6] payment already made
+=======
+        switch (prefix) {
+            case 'S' -> { roomArray = standard; price = 2500; }
+            case 'D' -> { roomArray = deluxe;  price = 4000; }
+            case 'T' -> { roomArray = suite;   price = 8000; }
+            default -> { return null; }
+        }
+
+        String guestName = null;
+        String occColumns = "";
+        int nights = 0;
+
+        //10 day loop
+        for (int c = 0; c < 10; c++) {
+            if (roomArray[row][c] == null) continue; //skip empty
+
+            String[] parts = roomArray[row][c].split("\\|");
+            if (parts.length < 2) continue;
+
+            String column = parts[0];
+            String name = parts[1];
+
+            if (!column.equals("Occupied") && !column.equals("Booked")) continue; //validation
+
+            //guest stay determination
+            if (guestName == null) {
+                guestName = name; //store variable
+                nights = 1;
+                occColumns = c + "";
+            } else if (guestName.equals(name)) {
+                nights++;
+                occColumns += "," + c;
+            }
+        }
+
+        if (guestName == null) return null;
+
+        double subtotal = nights * price;
+
+        return new String[]{
+                guestName,                 // [0]
+                String.valueOf(nights),    // [1]
+                String.valueOf(price),     // [2]
+                String.valueOf(subtotal),  // [3]
+                String.valueOf(row),       // [4]
+                occColumns                 // [5] this adds column list
+>>>>>>> de266742c6a16620c395eb5eb02a09da03ae94a3
         };
     }
 
