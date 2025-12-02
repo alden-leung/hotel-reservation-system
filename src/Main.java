@@ -457,7 +457,6 @@ public class Main {
     HELPER FUNCTIONS
      */
     private static String getUserInput(String message) {
-        //TODO: print input message and return user input as a String
         System.out.print(message);
         return kbd.nextLine();
     }
