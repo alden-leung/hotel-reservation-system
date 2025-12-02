@@ -29,7 +29,9 @@ Algorithm:
   • If found → mark days as "Occupied", generate room number, proceed to payment.
 4.6 Repeat payment until sufficient → on success, print confirmation and return true.
 4.7 If no suitable room is found → print no availability and return false.
+
 5. Check-Out Guest/ Generate Bill
+a.
 
 6. Payment
 
@@ -349,81 +351,84 @@ public class Main {
 }
 
     private static boolean checkOut() {
-        //TODO: should return true if check-out is successful and false if otherwise
+        String room;
+        String guestInput;
+        String[] status;
+        String realGuestName = "";
 
-        //!!!NOT FINISH!!!
-        /**
-        TO ADD:
-        1. validation for a room
-        2. loop when invalid input
-        3.
-         */
+        do {
+            room = getUserInput("Enter room number for checkout: ").toUpperCase().trim();
+            // Validate room
+            status = getCheckoutInfoArray(room);
+            if (status == null) {
+                System.out.println("Invalid room or no guest found. Try again.\n");
+            } else {
+                //Room is valid, now guest name
+                realGuestName = status[0];
+                guestInput = getUserInput("Enter guest name for verification: ").trim();
 
-        double bill = 8000; //bill should be determined at reservation / check-in =)
-        String name = "gabriel"; //name should be from reservation / check-in
-        int sFee = 250; //service fee
-        double tBill = bill+sFee; //bill added with fee
-        double tax = tBill*0.1; //10% tax to bill w/ fee
-        double fBill = tBill + tax; //add the 10%
-        double payment, change = 0; //initial values
+                if (!guestInput.equalsIgnoreCase(realGuestName)) {
+                    System.out.println("Guest name does not match the room record. Try again.\n");
+                    status = null; // ask again
+                }
+            }
+            // Validate guest name (Case Insensitive)
+        } while (status == null);
 
-        System.out.print("Input room number for checkout: ");
-        String room = kbd.nextLine();
-        //will add validation when final table is finished.
-        System.out.println("Verifying checkout for room " + room);
+        // We passed validation then continue to billing
+        int nights = Integer.parseInt(status[1]);
+        double price = Double.parseDouble(status[2]);
+        double subtotal = Double.parseDouble(status[3]);
+        int roomIndex = Integer.parseInt(status[4]);
+        String occupiedColString = status[5];
 
-        //bill + checkout calculation
-        System.out.println("\n--- Bill Checkout ---");
-        System.out.println("Subtotal (Room Rate Only): P" + bill);
-        System.out.println("Fixed Service Fee: P" + sFee);
-        System.out.println("Subtotal + Fee: P" + tBill);
-        System.out.println("Tax (10% of P" + tBill + "): P" + tax);
-        System.out.println("Total Amount Due: P" + tBill + " + P" + tax + " = P" +fBill);
+        double serviceFee = 250;
+        double totalBeforeTax = subtotal + serviceFee;
+        double tax = totalBeforeTax * 0.10;
+        double total = totalBeforeTax + tax;
 
-        //payment
-        System.out.println("*****call payment method here****\n");
-//        System.out.println(payment(room)); // call payment method
+        System.out.println("\n--- Bill Calculation ---");
+        System.out.println("Rate Per Night: ₱" + price);
+        System.out.println("Nights Stayed: " + nights);
+        System.out.println("Subtotal: ₱" + subtotal);
+        System.out.println("Fixed Service Fee: ₱" + serviceFee);
+        System.out.println("Tax (10%): ₱" + tax);
+        System.out.println("TOTAL DUE: ₱" + total);
 
-        //room vacant announcement
-        System.out.println("\nRoom " +room+ " is now available");
-        //update room table to blank/available
+        System.out.println(payment(room, realGuestName, total));
 
-        return true; // just a placeholder to avoid errors
+        clearRoomArray(room, roomIndex, occupiedColString);
+
+        System.out.println("\nCheckout successful. Room " + room + " is now available.\n");
+        return true;
     }
 
-    private static boolean payment(String room) {
-        //TODO: should return true if payment is successful and false if otherwise
-        double bill = 0; //bill should be determined at reservation / check-in =)
-        String name = "name"; //name should be from reservation / check-in
-        int sFee = 250;
-        double tBill = bill+sFee;
-        double tax = tBill*0.1;
-        double fBill = tBill + tax;
+    private static String payment(String room, String guest, double bill) {
         double payment, change = 0;
+        System.out.println("");
 
         do {
             System.out.print("Input Payment Amount: ");
             payment = Double.parseDouble(kbd.nextLine());
-            if (payment<fBill) {
+            if (payment<bill) {
                 System.out.println("Amount input is less than balance.");
             }
-        } while(payment < 0 || payment < fBill);
+        } while(payment < 0 || payment < bill);
 
         System.out.println("Payment: P"+payment+" received.");
-        if(payment>fBill) {
-            change = payment-fBill;
-            System.out.println("Change Calculation: P" + payment + " + P" + fBill + " = P" + change);
+        if(payment>bill) {
+            change = payment-bill;
+            System.out.println("Change Calculation: ₱" + payment + " - ₱" + bill + " = ₱" + change);
         }
         //final receipt
-        System.out.println("\n--- Final Bill / Receipt ---");
-        System.out.println("Guest: " + name + " | " + "Room: " + room);
-        System.out.println("TOTAL AMOUNT DUE: P"+ fBill);
-        System.out.println("Amount Paid: P" + payment);
-        if (payment>fBill) {
-            System.out.println("Change: P" + change);
+        System.out.println("Guest: " + guest + " | " + "Room: " + room);
+        System.out.println("TOTAL AMOUNT DUE: ₱"+ bill);
+        System.out.println("Amount Paid: ₱" + payment);
+        if (payment>bill) {
+            System.out.println("Change: ₱" + change);
         }
 
-        return false; // just a placeholder to avoid errors
+        return ""; // just a placeholder to avoid errors
     }
 
     /*
@@ -530,5 +535,85 @@ public class Main {
             }
         }
         System.out.println("└" + ("─".repeat(cellWidth) + "┴").repeat(cols) + ("─".repeat(cellWidth) + "┘")); // footer
+    }
+    private static String[] getCheckoutInfoArray(String roomNumber) {
+        char prefix = roomNumber.charAt(0);
+        int row = Integer.parseInt(roomNumber.substring(1)) - 100 - 1;
+
+        String[][] roomArray;
+        int price;
+
+        if (prefix == 'S') {
+            roomArray = standard;
+            price = 2500;
+        } else {
+            if (prefix == 'D') {
+                roomArray = deluxe;
+                price = 4000;
+            } else {
+                if (prefix == 'T') {
+                    roomArray = suite;
+                    price = 8000;
+                } else {
+                    return null;
+                }
+            }
+        }
+
+        String guestName = null;
+        String occColumns = "";
+        int nights = 0;
+
+        for (int c = 0; c < 10; c++) {
+            if (roomArray[row][c] == null) continue;
+
+            String[] parts = roomArray[row][c].split("\\|");
+            if (parts.length < 2) continue;
+
+            String status = parts[0];
+            String name = parts[1];
+
+            if (!status.equals("Occupied") && !status.equals("Booked")) continue;
+
+            if (guestName == null) {
+                guestName = name;
+                nights = 1;
+                occColumns = String.valueOf(c);
+            } else if (guestName.equals(name)) {
+                nights++;
+                occColumns += "," + c;
+            }
+        }
+
+        if (guestName == null) return null;
+
+        double subtotal = nights * price;
+
+        return new String[]{
+                guestName,                 // [0]
+                String.valueOf(nights),    // [1]
+                String.valueOf(price),     // [2]
+                String.valueOf(subtotal),  // [3]
+                String.valueOf(row),         // [4]
+                occColumns               // [5] this adds column list
+        };
+    }
+    private static void clearRoomArray(String roomNumber, int row, String colList) {
+        char prefix = roomNumber.charAt(0);
+        String[][] roomArray;
+
+        switch (prefix) {
+            case 'S' -> roomArray = standard;
+            case 'D' -> roomArray = deluxe;
+            case 'T' -> roomArray = suite;
+            default -> { return; }
+        }
+
+        String[] colIndexes = colList.split(",");
+
+        for (String col : colIndexes) {
+            int c = Integer.parseInt(col.trim());
+            roomArray[row][c] = null;
+        }
     }
 }
