@@ -1,3 +1,37 @@
+/*
+/*
+Members:
+1. Asuero, Luke Sebastian Lee
+2. Gabriel, Erron John A.
+3. Intendencia, Jared Wayne L.
+4. Lardizabal, Elois Althea
+5. Leung, Alden
+6. Rodriguez, Gabriel
+7. Tumolva, Iana Klarize
+
+Algorithm
+
+1. Main Menu
+
+2. Check Room Availability
+
+3. Make New Reservation
+
+4. Check-In (Walk-In)
+4.1 Display room types and get user choice.
+4.2 If choice = 4, return to main menu.
+4.3 Set the selected room type and bill, then get roomArray and roomPrefix.
+4.4 Input guest name and number of nights.
+4.5 Search each room for enough consecutive free days.
+  • If found → mark days as "Occupied", generate room number, proceed to payment.
+4.6 Repeat payment until sufficient → on success, print confirmation and return true.
+4.7 If no suitable room is found → print no availability and return false.
+5. Check-Out Guest/ Generate Bill
+
+6. Payment
+
+*/
+
 import java.util.Scanner;
 
 public class Main {
@@ -214,7 +248,7 @@ public class Main {
         String roomType = "";
         int bill = 03, input, numOfNights, payment;
        
-        String guestName = "", roomNumber = "";
+        String guestName, roomNumber = "";
         
          do {
             System.out.println("\n┌────────────────────────┐");
@@ -240,15 +274,15 @@ public class Main {
         } while (input < 1 || input > 4);
 
             switch (input) {
-                case 1 -> {checkRoomStatus(standard);
+                case 1 -> {
                             bill = 2500; 
                             roomType = "Standard";
                         }
-                case 2 -> {checkRoomStatus(deluxe); 
+                case 2 -> {
                             bill = 4000;
                             roomType = "Deluxe";
                         }
-                case 3 -> {checkRoomStatus(suite);
+                case 3 -> {
                             bill = 8000;
                             roomType = "Suite";
                         }
@@ -291,9 +325,10 @@ public class Main {
                     do{
                         payment = Integer.parseInt(getUserInput("Input Payment(Room Only, Php " + bill + " * " + numOfNights +" = " +bill*numOfNights + "): "));
                         if (payment >= bill * numOfNights){
-                            System.out.println("Payment Successful." +
-                                        "\n--- Check-In Sccessful ---" +
-                                        "\nUpdate Status: Room " + roomNumber + " is now set to 'Occupied' by " + guestName + ".");
+                            System.out.println("""
+                                               Payment Successful.
+                                               --- Check-In Sccessful ---
+                                               Update Status: Room """ + roomNumber + " is now set to 'Occupied' by " + guestName + ".");
                             System.out.println("Check-In Successful! Guest " + guestName +
                                                 " is now occupying Room " + roomNumber + " room.");
                             return true;
