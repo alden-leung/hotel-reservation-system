@@ -1,3 +1,22 @@
+/*
+Members:
+1. Asuero, Luke Sebastian Lee
+2. Gabriel, Erron John A.
+3. Intendencia, Jared Wayne L.
+4. Lardizabal, Elois Althea
+5. Leung, Alden
+6. Rodriguez, Gabriel
+7. Tumolva, Iana Klarize
+
+Algorithm
+
+1. Main Menu
+2. Check Room Availability
+3. Make New Reservation
+4. Check-In (walk-in)
+5. Check-Out Guest/ Generate Bill
+6. Payment
+*/
 import java.util.Scanner;
 
 public class Main {
