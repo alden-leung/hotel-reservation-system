@@ -16,8 +16,22 @@ Algorithm:
 
 1. Main Menu
 
-2. Check Room Availability
-
+2.1 Display all room types (Standard, Deluxe, Suite) and prompt user to select one.
+    • If the user selects the option 4 → go back to Main Menu.
+2.2 Set the selected Room Type based on the user’s choice.
+2.3 Retrieve the total number of rooms and the room status array for the chosen Room Type.
+2.4 Count how many rooms are currently marked as:
+        • "Available"
+        • "Booked"
+        • (Ignore rooms marked as "Occupied" for availability purposes)
+2.5 Display the Room Availability Summary:
+        • Room Type
+        • Total number of rooms for that type
+        • Number of Available rooms
+        • Number of Booked rooms
+        • Price per night
+        • Table
+2.6 Return to the Main Menu.
 3. Make New Reservation
 
 4. Check-In (Walk-In)
@@ -26,7 +40,7 @@ Algorithm:
 4.3 Set the selected room type and bill, then get roomArray and roomPrefix.
 4.4 Input guest name and number of nights.
 4.5 Search each room for enough consecutive free days.
-  • If found → mark days as "Occupied", generate room number, proceed to payment.
+    • If found → mark days as "Occupied", generate room number, proceed to payment.
 4.6 Repeat payment until sufficient → on success, print confirmation and return true.
 4.7 If no suitable room is found → print no availability and return false.
 
@@ -68,14 +82,14 @@ public class Main {
                 System.out.println("├─────────────────────────────────────┤");
                 System.out.println("│ 5. Exit Application                 │");
                 System.out.println("└─────────────────────────────────────┘");
-                input = Integer.parseInt(getUserInput("Enter your choice: "));
+                input = Integer.parseInt(getUserInput("Enter your choice: "));                  //Choice for Main Menu
 
-                if (input < 1 || input > 5) {
+                if (input < 1 || input > 5) {                                                   // Condition for Error Input of Choices
                     System.out.println("\nPlease choose an option from 1 to 5 only...");
                 }
-            } while (input < 1 || input > 5);
+            } while (input < 1 || input > 5); //Condition to be Loop
 
-            if (input == 5) {
+            if (input == 5) {                                                                   // Exit Application
                 System.out.println("Exiting Application...");
                 System.exit(0);
             }
@@ -108,7 +122,7 @@ public class Main {
                 System.out.println("├───────────────────────────┤");
                 System.out.println("│ 4. GO BACK                │");
                 System.out.println("└───────────────────────────┘");
-                input = Integer.parseInt(getUserInput("Enter your choice: "));
+                input = Integer.parseInt(getUserInput("Enter your choice: "));  //With Method of Input
 
                 // invalid input message
                 if (input < 1 || input > 4) {
@@ -182,7 +196,7 @@ public class Main {
         printTable(roomArray, roomPrefix);
 
         // guest name
-        guestName = getUserInput("Input Guest Name: ").trim();
+            guestName = getUserInput("Input Guest Name: ").trim();
 
         // number of days
         numOfDays = Integer.parseInt(getUserInput("Input Number of Days: "));
@@ -520,7 +534,7 @@ public class Main {
         System.out.println("\n" + "┌" + ("─".repeat(cellWidth) + "┬").repeat(cols) + ("─".repeat(cellWidth) + "┐"));
         for (int i = -1; i < dates.length; i++) {
             if (i == -1) {
-                System.out.print("│            ");
+                System.out.print("│            -");
             } else {
                 System.out.printf("│ %-10s ", dates[i]);
             }
