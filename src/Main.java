@@ -198,7 +198,7 @@ public class Main {
             String date = getUserInput("Date " + i + ": ");
             datesToReserve[i - 1] = date;
         }
-
+        
         System.out.println("\nProcessing Reservation...");
 
         boolean successful = false;
@@ -295,12 +295,19 @@ public class Main {
                             roomType = "Suite";
                         }
             }
-    
     // room details
         String[][] roomArray = getRoomArray(input);
         String roomPrefix = getRoomPrefix(input);
     // guest name 
-        guestName = getUserInput("Input Guest Name: ");
+    
+    do {
+        guestName = getUserInput("Input Guest Name: ").trim();
+    
+        if (guestName.isEmpty()) {
+            System.out.println("Guest name cannot be empty. Please try again.");
+        }
+
+        } while (guestName.isEmpty());
         
         
     // number of nights
