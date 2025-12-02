@@ -599,9 +599,9 @@ public class Main {
         System.out.println("\n" + "┌" + ("─".repeat(cellWidth) + "┬").repeat(cols) + ("─".repeat(cellWidth) + "┐"));
         for (int i = -1; i < dates.length; i++) {
             if (i == -1) {
-                System.out.print("│            ");
+                System.out.print("│            ");  //First Row, First Column
             } else {
-                System.out.printf("│ %-10s ", dates[i]);
+                System.out.printf("│ %-10s ", dates[i]); //Print Formula for Dates
             }
         }
         System.out.println("│");
