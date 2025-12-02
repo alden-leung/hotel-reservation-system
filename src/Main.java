@@ -467,11 +467,6 @@ public class Main {
         return day - 17;
     }
 
-    private static String checkRoomStatus(String[][] room) {
-
-        return ""; // just a placeholder to avoid errors
-    }
-
     private static String[] getRoomTypeDetails(String[][] room) {
         // room type
         String roomType = room.length == 15 ? "Standard" : room.length == 10 ? "Deluxe" : "Suite";
