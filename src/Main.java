@@ -1,7 +1,9 @@
 /*
 Project Name: Hotel Reservation System Simulation
-Date: December 3, 2025
-Members:
+Date: December 3, 2025, WS 8:30-10:00 AM (Laboratory) / 1:30-2:30 PM (Lecture)
+Instructor: Janet V. Itliong
+
+Group 3 Members:
 1. Asuero, Luke Sebastian Lee
 2. Gabriel, Erron John A.
 3. Intendencia, Jared Wayne L.
@@ -10,7 +12,7 @@ Members:
 6. Rodriguez, Gabriel
 7. Tumolva, Iana Klarize
 
-Algorithm
+Algorithm:
 
 1. Main Menu
 
