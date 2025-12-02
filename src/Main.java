@@ -407,7 +407,7 @@ public class Main {
             System.out.println("""
                     Payment Successful.
                     --- Check-In Successful ---
-                    Update Status: Room """ + roomNumber + " is now set to 'Occupied' by " + guestName + ".");
+                    Update Status: Room  """ + roomNumber + " is now set to 'Occupied' by " + guestName + ".");
 
             return true;
         }
