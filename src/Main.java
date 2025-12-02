@@ -52,7 +52,7 @@ Algorithm:
 5.5 Create method that makes the room status "Available" in the system.
 
 6. Payment
-
+6.1 Calculate the amount input
 */
 
 import java.util.Scanner;
@@ -662,7 +662,7 @@ public class Main {
 
             //guest stay determination
             if (guestName == null) {
-                guestName = name; //save
+                guestName = name; //store variable
                 nights = 1;
                 occColumns = String.valueOf(c);
             } else if (guestName.equals(name)) {
