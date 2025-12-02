@@ -345,6 +345,8 @@ public class Main {
                         }
                     }while (payment < bill * numOfNights);
                     break;
+                }else{
+                    System.out.println("No available rooms for the requested nights.");
                 }
                 
             }
