@@ -390,6 +390,7 @@ public class Main {
                 payment = Integer.parseInt(getUserInput(
                         "Input Payment (Room Only, Php " + bill + " * " + numOfNights + " = " + bill*numOfNights + "): "
                 ));
+                        System.out.println("your change is " + (payment - (bill * numOfNights)));
                 if (payment < bill * numOfNights) {
                     System.out.println("Insufficient payment. Try again.");
                 }
