@@ -176,7 +176,6 @@ public class Main {
             System.out.println("└────────────────────────┘");
             input = Integer.parseInt(getUserInput("Enter your choice: "));
 
-            // back to menu
             if (input == 4) {
                 System.out.println("Back to Main Menu...");
                 return;
@@ -187,59 +186,114 @@ public class Main {
             }
         } while (input < 1 || input > 4);
 
-        // room table
         String[][] roomArray = getRoomArray(input);
 
-        // room details
         String[] roomDetails = getRoomTypeDetails(roomArray);
         String roomPrefix = getRoomPrefix(input);
         printTable(roomArray, roomPrefix);
 
-        // guest name
+        //NAME VALIDATION (ADDED)
+
+        boolean nameExists;
+        do {
             guestName = getUserInput("Input Guest Name: ").trim();
+            nameExists = false;
 
-        // number of days
-        numOfDays = Integer.parseInt(getUserInput("Input Number of Days: "));
+            // Check all rooms & dates for duplicate name
+            for (int r = 0; r < roomArray.length; r++) {
+                for (int c = 0; c < roomArray[0].length; c++) {
+                    if (roomArray[r][c] != null) {
+                        String[] parts = roomArray[r][c].split("\\|");
+                        if (parts.length == 2) {
+                            String storedName = parts[1];
+                            if (storedName.equals(guestName)) { // case-sensitive
+                                nameExists = true;
+                                break;
+                            }
+                        }
+                    }
+                }
+                if (nameExists) break;
+            }
 
-        // price
+            if (nameExists) {
+                System.out.println("Error: Guest name already exists. Please use another name.");
+            }
+            if (guestName.isEmpty()) {
+                System.out.println("Guest name cannot be empty.");
+                nameExists = true;
+            }
+
+        } while (nameExists);
+
+         // NUMBER OF DAYS VALIDATION
+
+        do {
+            numOfDays = Integer.parseInt(getUserInput("Input Number of Days (1–10): "));
+            if (numOfDays < 1 || numOfDays > 10) {
+                System.out.println("Error: Number of days must be 1–10 only.");
+            }
+        } while (numOfDays < 1 || numOfDays > 10);
+
         pricePerNight = Integer.parseInt(roomDetails[3]);
         totalPrice = pricePerNight * numOfDays;
 
-        // dates
+        //DATE VALIDATION (ADDED)
+
         String[] datesToReserve = new String[numOfDays];
+        String validStart = "11/17/2025";
+        String validEnd = "11/26/2025";
 
         for (int i = 1; i <= numOfDays; i++) {
-            String date = getUserInput("Date " + i + ": ");
+            boolean validDate;
+            String date;
+
+            do {
+                date = getUserInput("Date " + i + ": ").trim();
+                validDate = false;
+
+                // check if valid among the 10 allowed dates
+                for (String d : dates) {
+                    if (d.equals(date)) {
+                        validDate = true;
+                        break;
+                    }
+                }
+
+                if (!validDate) {
+                    System.out.println("Error: Invalid date. Allowed dates: 11/17/2025 to 11/26/2025.");
+                }
+
+            } while (!validDate);
+
             datesToReserve[i - 1] = date;
         }
-        
+
         System.out.println("\nProcessing Reservation...");
 
         boolean successful = false;
 
-
         for (int r = 0; r < roomArray.length; r++) {
-            boolean roomAvailable = false;
+            boolean roomAvailable = true;
 
-            // check if room is available for specified dates
             for (String date : datesToReserve) {
                 int c = getColIdx(date);
 
-                roomAvailable = roomArray[r][c] == null;
+                if (roomArray[r][c] != null) {
+                    roomAvailable = false;
+                    break;
+                }
             }
 
-            // if room is available, proceed with the reservation for that room
             if (roomAvailable) {
                 for (String date : datesToReserve) {
                     int c = getColIdx(date);
-
                     roomArray[r][c] = "Booked|" + guestName;
                 }
 
                 roomNumber = roomPrefix + (100 + r + 1);
 
                 System.out.println("\nFound: " + roomNumber);
-
                 System.out.println(
                         "Reservation Fee (Room Rate Only): " +
                                 "₱" + pricePerNight + " / night x " + numOfDays + " night/s = ₱" + totalPrice
@@ -539,7 +593,7 @@ public class Main {
         System.out.println("\n" + "┌" + ("─".repeat(cellWidth) + "┬").repeat(cols) + ("─".repeat(cellWidth) + "┐"));
         for (int i = -1; i < dates.length; i++) {
             if (i == -1) {
-                System.out.print("│            -");
+                System.out.print("│            ");
             } else {
                 System.out.printf("│ %-10s ", dates[i]);
             }
