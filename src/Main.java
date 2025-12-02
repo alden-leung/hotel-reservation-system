@@ -301,16 +301,28 @@ public class Main {
 
     // guest name 
     do {
-        guestName = getUserInput("Input Guest Name: ").trim();
+        guestName = getUserInput("Input Guest Name: ").trim();// input of user
     
-        if (guestName.isEmpty()) {
-            System.out.println("Guest name cannot be empty. Please try again.");
+        if (guestName.isEmpty()) {//validation of the name of the user if they gave a blank
+            System.out.println("Guest name cannot be empty. Please try again."); 
         }
 
         } while (guestName.isEmpty());
         
     // number of nights bro wants to sleep in the hotel
+    boolean finish = true;
+    do{
         numOfNights = Integer.parseInt(getUserInput("input nights booked: "));
+
+        if (numOfNights > 0 ){
+            finish = false;
+        }else{
+            System.out.println("invalid input try again.");
+        }   
+    }while (finish);
+        
+
+    // procesing print to assure the user
         System.out.println("Processing Walk-in Check-In... Checking for available " + roomType + " rooms"+ "(Php "+bill +"/night)...");
 
     // check for available room and update status
