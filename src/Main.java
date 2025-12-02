@@ -645,16 +645,16 @@ public class Main {
             String[] parts = roomArray[row][c].split("\\|");
             if (parts.length < 2) continue;
 
-            String status = parts[0];
+            String column = parts[0];
             String name = parts[1];
 
-            if (!status.equals("Occupied") && !status.equals("Booked")) continue; //validation
+            if (!column.equals("Occupied") && !column.equals("Booked")) continue; //validation
 
             //guest stay determination
             if (guestName == null) {
                 guestName = name; //store variable
                 nights = 1;
-                occColumns = String.valueOf(c);
+                occColumns = c + "";
             } else if (guestName.equals(name)) {
                 nights++;
                 occColumns += "," + c;
