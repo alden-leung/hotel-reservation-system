@@ -393,13 +393,15 @@ public class Main {
         double tax = totalBeforeTax * 0.10;
         double total = totalBeforeTax + tax;
 
-        System.out.println("\n--- Bill Calculation ---");
-        System.out.println("Rate Per Night: ₱" + price);
-        System.out.println("Nights Stayed: " + nights);
-        System.out.println("Subtotal: ₱" + subtotal);
-        System.out.println("Fixed Service Fee: ₱" + serviceFee);
-        System.out.println("Tax (10%): ₱" + tax);
-        System.out.println("TOTAL DUE: ₱" + total);
+        System.out.println("─────────────────────────");
+        System.out.println("Bill Calculation");
+        System.out.println("Rate Per Night: \t₱" + price);
+        System.out.println("Nights Stayed:\t\t" + nights);
+        System.out.println("Subtotal: \t\t\t₱" + subtotal);
+        System.out.println("Fixed Service Fee: \t₱" + serviceFee);
+        System.out.println("Tax (10%): \t\t\t₱" + tax);
+        System.out.println("TOTAL DUE: \t\t\t₱" + total);
+        System.out.println("─────────────────────────");
 
         System.out.println(payment(room, realGuestName, total));
 
@@ -619,7 +621,7 @@ public class Main {
 
         for (String col : colIndexes) {
             int c = Integer.parseInt(col.trim());
-            roomArray[row][c] = "Available";
+            roomArray[row][c] = null;
         }
     }
     private static void initializeTables(){
