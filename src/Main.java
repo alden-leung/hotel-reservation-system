@@ -232,7 +232,7 @@ public class Main {
          // NUMBER OF DAYS VALIDATION
 
         do {
-            numOfDays = Integer.parseInt(getUserInput("Input Number of Days (1–10): "));
+            numOfDays = Integer.parseInt(getUserInput("Input Number of Days (1 to 10): "));
             if (numOfDays < 1 || numOfDays > 10) {
                 System.out.println("Error: Number of days must be 1 to 10 only.");
             }
