@@ -479,33 +479,38 @@ public class Main {
 }
 
 
-    private static String payment(String room, String guest, double bill) {
-        double payment, change = 0;
-        System.out.println("");
+    private static double payment(String room, String guest, double bill) {
+    double payment;
+    double change = 0.0;
+    System.out.println("");
 
-        do {
-            System.out.print("Input Payment Amount: ");
-            payment = Double.parseDouble(kbd.nextLine());
-            if (payment<bill) {
-                System.out.println("Insufficient amount. Try again.");
-            }
-        } while(payment < 0 || payment < bill);
-
-        System.out.println("Payment: ₱"+payment+" received.");
-        if(payment>bill) {
-            change = payment-bill;
-            System.out.println("Change Calculation: ₱" + payment + " - ₱" + bill + " = ₱" + change);
+    do {
+        System.out.print("Input Payment Amount: ");
+        payment = Double.parseDouble(kbd.nextLine());
+        if (payment < bill) {
+            System.out.println("Insufficient amount. Try again.");
         }
-        //final receipt
-        System.out.println("Guest: " + guest + " | " + "Room: " + room);
-        System.out.println("TOTAL AMOUNT DUE: ₱"+ bill);
-        System.out.println("Amount Paid: ₱" + payment);
-        if (payment>bill) {
-            System.out.println("Change: ₱" + change);
+        if (payment < 0) {
+            System.out.println("Payment cannot be negative. Try again.");
         }
+    } while (payment < bill);
 
-        return ""; // just a placeholder to avoid errors
+    System.out.println("Payment: ₱" + payment + " received.");
+    if (payment > bill) {
+        change = payment - bill;
+        System.out.println("Change Calculation: ₱" + payment + " - ₱" + bill + " = ₱" + change);
     }
+    // final receipt
+    System.out.println("Guest: " + guest + " | " + "Room: " + room);
+    System.out.println("TOTAL AMOUNT DUE: ₱" + bill);
+    System.out.println("Amount Paid: ₱" + payment);
+    if (payment > bill) {
+        System.out.println("Change: ₱" + change);
+    }
+
+    return payment;
+}
+
 
     /*
     HELPER FUNCTIONS
