@@ -14,8 +14,10 @@ Group 3 Members:
 
 Algorithm:
 
-1. Main Menu
-
+1.  Main Menu
+1.1 The system displays the Main Menu options.
+1.2 The user inputs their selected option.
+1.3 The system redirects the user to the corresponding module based on the chosen option.
 2.1 Display all room types (Standard, Deluxe, Suite) and prompt user to select one.
     • If the user selects the option 4 → go back to Main Menu.
 2.2 Set the selected Room Type based on the user’s choice.
@@ -33,7 +35,25 @@ Algorithm:
         • Table
 2.6 Return to the Main Menu.
 3. Make New Reservation
-
+3.1  The system asks the user to select a room type for the reservation.
+3.2  The user selects from Standard, Deluxe, or Suite.
+3.3  The system validates the input and continues.
+3.4  The system asks the user to enter the guest name.
+3.5  The system validates that the guest name is not empty.
+3.6  The system checks all rooms and dates to ensure the name has not been used.
+3.7  If the name exists, the system prompts the user to enter a different name.
+3.8  The system asks the user to input the number of days.
+3.9  The system validates that the number of days is between 1 and 10.
+3.10 The system asks the user to input the reservation dates one by one.
+3.11 The system checks that each date is within the allowed range.
+3.12 The system stores each valid date in a date array.
+3.13 The system searches for a room where all chosen dates are available.
+3.14 If a room is available, the system marks each selected date as “Booked|guestName”.
+3.15 The system generates the appropriate room number.
+3.16 The system calculates the total reservation fee.
+3.17 The system displays the reservation summary.
+3.18 If no room is available, the system displays an error message.
+3.19 The system returns to the Main Menu.
 4. Check-In (Walk-In)
 4.1 Display room types and get user choice.
 4.2 If choice = 4, return to main menu.
@@ -407,7 +427,7 @@ public class Main {
             System.out.println("""
                     Payment Successful.
                     --- Check-In Successful ---
-                    Update Status: Room """ + roomNumber + " is now set to 'Occupied' by " + guestName + ".");
+                    Update Status: Room  """ + roomNumber + " is now set to 'Occupied' by " + guestName + ".");
 
             return true;
         }
@@ -584,9 +604,9 @@ public class Main {
         System.out.println("\n" + "┌" + ("─".repeat(cellWidth) + "┬").repeat(cols) + ("─".repeat(cellWidth) + "┐"));
         for (int i = -1; i < dates.length; i++) {
             if (i == -1) {
-                System.out.print("│            ");
+                System.out.print("│            ");  //First Row, First Column
             } else {
-                System.out.printf("│ %-10s ", dates[i]);
+                System.out.printf("│ %-10s ", dates[i]); //Print Formula for Dates
             }
         }
         System.out.println("│");
@@ -632,7 +652,7 @@ public class Main {
     for (int c = 0; c < 10; c++) {
         if (roomArray[row][c] == null) continue;
 
-        String[] parts = roomArray[row][c].split("\\|");
+        String[] parts = roomArray[row][c].split("\\|");    //checks occupied or booked | name
         if (parts.length < 2) continue;
 
         String status = parts[0];
